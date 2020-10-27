@@ -47,8 +47,9 @@ RUN git clone --depth 1 --recurse-submodules --shallow-submodules -j 8 -b ${PHAL
 FROM ubuntu:18.04
 
 ARG SGX_MODE="SW"
-ARG SGX_SDK_DOWNLOAD_URL="https://download.01.org/intel-sgx/sgx-linux/2.11/distro/ubuntu18.04-server/sgx_linux_x64_sdk_2.11.100.2.bin"
 ARG PSW_VERSION='2.11.100.2-bionic1'
+
+ENV SGX_MODE="$SGX_MODE"
 
 WORKDIR /root
 
@@ -71,8 +72,6 @@ RUN apt update && \
     libsgx-urts="$PSW_VERSION" && \
     apt autoremove -y && \
     apt clean -y
-
-RUN echo "$SGX_MODE" >> /root/sgx_mode
 
 COPY --from=0 /opt/intel /opt/intel
 COPY --from=0 /root/enclave.signed.so .

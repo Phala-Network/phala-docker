@@ -2,7 +2,7 @@
 
 STATE_FILE_PATH=${STATE_FILE_PATH:-"data"}
 
-if [ `cat sgx_mode` == "SW" ]
+if [ "$SGX_MODE" == "SW" ]
 then
   echo "PRuntime will running in software mode"
 
