@@ -69,9 +69,11 @@ Force stop
 
 `docker rm phala-node`
 
-### Show outputs
+### Show logs
 
-`docker attach --sig-proxy=false phala-node`
+`docker logs phala-node`
+
+`docker attach --sig-proxy=false --detach-keys=ctrl-c phala-node`
 
 ### Run shell
 
@@ -79,7 +81,7 @@ Force stop
 
 ### Clean up
 
-`docker image prune`
+`docker image prune -a`
 
 ## Build, Push, Pull to GitHub
 
