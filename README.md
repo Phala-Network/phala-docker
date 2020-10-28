@@ -19,7 +19,7 @@ This repo contains dockerfiles for deployment
 
 #### Build
 
-> For security reason, non-official build can not be registered to Phala chain network.
+> For security reason, unofficial PRuntime build can not be registered to Phala chain network.
 
 Software mode
 
