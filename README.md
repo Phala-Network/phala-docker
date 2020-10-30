@@ -109,6 +109,8 @@ Force stop
 
 - Proxy and other Systemd relates configurations <https://docs.docker.com/config/daemon/systemd/>
 - Manage Docker as a non-root user (avoid `sudo`) <https://docs.docker.com/engine/install/linux-postinstall/>
+- Add `--restart=unless-stopped` to `docker run` to improve availability
+- You can use `docker create` instead of `docker run` for create the container but not run it immediately
 
 ## License
 
