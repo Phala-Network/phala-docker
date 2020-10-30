@@ -15,11 +15,11 @@ ARG SGX_ENCLAVE_CONFIG_URL=''
 
 WORKDIR /root
 
-RUN apt update && \
-    apt upgrade -y && \
-    apt install -y autoconf automake bison build-essential cmake curl dpkg-dev expect flex gcc-8 gdb git git-core gnupg kmod libboost-system-dev libboost-thread-dev libcurl4-openssl-dev libiptcdata0-dev libjsoncpp-dev liblog4cpp5-dev libprotobuf-c0-dev libprotobuf-dev libssl-dev libtool libxml2-dev ocaml ocamlbuild pkg-config protobuf-compiler python sudo systemd-sysv texinfo uuid-dev vim wget dkms gnupg2 apt-transport-https software-properties-common apt-utils && \
-    apt autoremove -y && \
-    apt clean -y
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y autoconf automake bison build-essential cmake curl dpkg-dev expect flex gcc-8 gdb git git-core gnupg kmod libboost-system-dev libboost-thread-dev libcurl4-openssl-dev libiptcdata0-dev libjsoncpp-dev liblog4cpp5-dev libprotobuf-c0-dev libprotobuf-dev libssl-dev libtool libxml2-dev ocaml ocamlbuild pkg-config protobuf-compiler python sudo systemd-sysv texinfo uuid-dev vim wget dkms gnupg2 apt-transport-https software-properties-common apt-utils && \
+    apt-get autoremove -y && \
+    apt-get clean -y
 
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain="${RUST_TOOLCHAIN}" && \
     /root/.cargo/bin/cargo install xargo
@@ -48,11 +48,11 @@ FROM ubuntu:18.04
 
 WORKDIR /root
 
-RUN apt update && \
-    apt upgrade -y && \
-    apt install -y curl vim wget gnupg apt-transport-https software-properties-common apt-utils && \
-    apt autoremove -y && \
-    apt clean -y
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y curl vim wget gnupg apt-transport-https software-properties-common apt-utils && \
+    apt-get autoremove -y && \
+    apt-get clean -y
 
 ARG SGX_MODE="SW"
 ARG PSW_VERSION='2.11.100.2-bionic1'
@@ -73,7 +73,7 @@ RUN curl -fsSL https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.k
         libsgx-quote-ex-dev="$PSW_VERSION" \
         libsgx-uae-service="$PSW_VERSION" \
         libsgx-urts="$PSW_VERSION" && \
-    apt clean -y
+    apt-get clean -y
 
 COPY --from=0 /opt/intel /opt/intel
 COPY --from=0 /root/enclave.signed.so .

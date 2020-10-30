@@ -7,11 +7,11 @@ ARG PHALA_GIT_TAG='master'
 
 WORKDIR /root
 
-RUN apt update && \
-    apt upgrade -y && \
-    apt install -y cmake pkg-config libssl-dev git build-essential llvm-10 clang-10 libclang-10-dev curl apt-utils && \
-    apt autoremove -y && \
-    apt clean -y
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y cmake pkg-config libssl-dev git build-essential llvm-10 clang-10 libclang-10-dev curl apt-utils && \
+    apt-get autoremove -y && \
+    apt-get clean -y
 
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain="${RUST_TOOLCHAIN}" && \
     $HOME/.cargo/bin/rustup target add wasm32-unknown-unknown --toolchain "${RUST_TOOLCHAIN}"
@@ -32,11 +32,11 @@ FROM ubuntu:18.04
 
 WORKDIR /root
 
-RUN apt update && \
-    apt upgrade -y && \
-    apt install -y curl vim wget gnupg apt-transport-https software-properties-common apt-utils && \
-    apt autoremove -y && \
-    apt clean -y
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y curl vim wget gnupg apt-transport-https software-properties-common apt-utils && \
+    apt-get autoremove -y && \
+    apt-get clean -y
 
 COPY --from=0 /root/phost .
 ADD dockerfile.d/start_phost.sh ./start_phost.sh

@@ -2,11 +2,11 @@ FROM ubuntu:18.04
 
 WORKDIR /root
 
-RUN apt update && \
-    apt upgrade -y && \
-    apt install -y curl vim wget gnupg apt-transport-https software-properties-common apt-utils && \
-    apt autoremove -y && \
-    apt clean -y
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y curl vim wget gnupg apt-transport-https software-properties-common apt-utils && \
+    apt-get autoremove -y && \
+    apt-get clean -y
 
 ARG PSW_VERSION='2.11.100.2-bionic1'
 
@@ -26,7 +26,7 @@ RUN curl -fsSL https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.k
         libsgx-quote-ex-dev="$PSW_VERSION" \
         libsgx-uae-service="$PSW_VERSION" \
         libsgx-urts="$PSW_VERSION" && \
-    apt clean -y
+    apt-get clean -y
 
 ADD prebuilt/app .
 ADD prebuilt/enclave.signed.so .
