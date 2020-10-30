@@ -9,7 +9,7 @@ WORKDIR /root
 
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y cmake pkg-config libssl-dev git build-essential llvm-10 clang-10 libclang-10-dev curl apt-utils && \
+    apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 ca-certificates cmake pkg-config libssl-dev git build-essential llvm-10 clang-10 libclang-10-dev && \
     apt-get autoremove -y && \
     apt-get clean -y
 
@@ -30,21 +30,23 @@ RUN echo "Compiling Phala Blockchain from $PHALA_GIT_REPO:$PHALA_GIT_TAG..." && 
 
 FROM ubuntu:18.04
 
+ARG DEBIAN_FRONTEND='noninteractive'
+
 WORKDIR /root
 
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y curl vim wget gnupg apt-transport-https software-properties-common apt-utils && \
+    apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 ca-certificates && \
     apt-get autoremove -y && \
     apt-get clean -y
-
-COPY --from=0 /root/phost .
-ADD dockerfile.d/start_phost.sh ./start_phost.sh
 
 ENV PRUNTIME_ENDPOINT='http://127.0.0.1:8000'
 ENV PHALA_NODE_WS_ENDPOINT='ws://127.0.0.1:9944'
 ENV MNEMONIC=''
 ENV EXTRA_OPTS='-r'
 ENV SLEEP_BEFORE_START=0
+
+COPY --from=0 /root/phost .
+ADD dockerfile.d/start_phost.sh ./start_phost.sh
 
 CMD bash ./start_phost.sh

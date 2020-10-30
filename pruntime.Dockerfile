@@ -17,7 +17,7 @@ WORKDIR /root
 
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y autoconf automake bison build-essential cmake curl dpkg-dev expect flex gcc-8 gdb git git-core gnupg kmod libboost-system-dev libboost-thread-dev libcurl4-openssl-dev libiptcdata0-dev libjsoncpp-dev liblog4cpp5-dev libprotobuf-c0-dev libprotobuf-dev libssl-dev libtool libxml2-dev ocaml ocamlbuild pkg-config protobuf-compiler python sudo systemd-sysv texinfo uuid-dev vim wget dkms gnupg2 apt-transport-https software-properties-common apt-utils && \
+    apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 ca-certificates autoconf automake bison build-essential cmake dpkg-dev expect flex gcc-8 gdb git libboost-system-dev libboost-thread-dev libcurl4-openssl-dev libiptcdata0-dev libjsoncpp-dev liblog4cpp5-dev libprotobuf-c0-dev libprotobuf-dev libssl-dev libtool libxml2-dev ocaml ocamlbuild pkg-config protobuf-compiler python texinfo && \
     apt-get autoremove -y && \
     apt-get clean -y
 
@@ -46,11 +46,13 @@ RUN git clone --depth 1 --recurse-submodules --shallow-submodules -j 8 -b ${PHAL
 
 FROM ubuntu:18.04
 
+ARG DEBIAN_FRONTEND='noninteractive'
+
 WORKDIR /root
 
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y curl vim wget gnupg apt-transport-https software-properties-common apt-utils && \
+    apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 ca-certificates && \
     apt-get autoremove -y && \
     apt-get clean -y
 
