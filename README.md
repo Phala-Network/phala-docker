@@ -31,7 +31,13 @@ Hardware mode
 
 #### Run
 
+Software mode
+
 `docker run -ti --name phala-pruntime -d -p 8000:8000 -v $(pwd)/data:/root/data phala-pruntime:TAG_NAME`
+
+Hardware mode
+
+`docker run -ti --name phala-pruntime -d -p 8000:8000 -v $(pwd)/data:/root/data --device /dev/sgx/enclave --device /dev/sgx/provision phala-pruntime:TAG_NAME`
 
 ### PHost
 

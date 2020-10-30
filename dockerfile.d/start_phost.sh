@@ -1,5 +1,13 @@
 #!/usr/bin/env bash
 
+SLEEP_BEFORE_START=${SLEEP_BEFORE_START:-"0"}
+if [ ! "$SLEEP_BEFORE_START" == "0" ]
+then
+  echo "Sleep ${SLEEP_BEFORE_START}s"
+
+  sleep "$SLEEP_BEFORE_START"
+fi
+
 echo "Starting PHost with extra opts '${EXTRA_OPTS}'"
 
 ./phost \
