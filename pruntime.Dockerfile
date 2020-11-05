@@ -1,7 +1,7 @@
 FROM ubuntu:18.04
 
 ARG DEBIAN_FRONTEND='noninteractive'
-ARG RUST_TOOLCHAIN='nightly-2020-04-07'
+ARG RUST_TOOLCHAIN='nightly-2020-11-05'
 ARG PHALA_GIT_REPO='https://github.com/Phala-Network/phala-blockchain.git'
 ARG PHALA_GIT_TAG='master'
 

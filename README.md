@@ -13,7 +13,7 @@ This repo contains dockerfiles for deployment
 
 #### Run
 
-`docker run -ti --name phala-node -d -e NODE_NAME=my-phala-node -p 9615:9615 -p 9933:9933 -p 9944:9944 -p 30333:30333 -v $(pwd)/data:/root/data phala-node:TAG_NAME`
+`docker run -ti --rm --name phala-node -d -e NODE_NAME=my-phala-node -p 9615:9615 -p 9933:9933 -p 9944:9944 -p 30333:30333 -v $(pwd)/data:/root/data phala-node:TAG_NAME`
 
 ### PRuntime
 
@@ -33,11 +33,11 @@ Hardware mode
 
 Software mode
 
-`docker run -ti --name phala-pruntime -d -p 8000:8000 -v $(pwd)/data:/root/data phala-pruntime:TAG_NAME`
+`docker run -ti --rm --name phala-pruntime -d -p 8000:8000 -v $(pwd)/data:/root/data phala-pruntime:TAG_NAME`
 
 Hardware mode
 
-`docker run -ti --name phala-pruntime -d -p 8000:8000 -v $(pwd)/data:/root/data --device /dev/sgx/enclave --device /dev/sgx/provision phala-pruntime:TAG_NAME`
+`docker run -ti --rm --name phala-pruntime -d -p 8000:8000 -v $(pwd)/data:/root/data --device /dev/sgx/enclave --device /dev/sgx/provision phala-pruntime:TAG_NAME`
 
 ### PHost
 
@@ -47,11 +47,13 @@ Hardware mode
 
 #### Run
 
-`docker run -ti --name phala-phost -d -e PRUNTIME_ENDPOINT="http://YOUR_IP:8000" -e PHALA_NODE_WS_ENDPOINT="ws://YOUR_IP:9944" -e MNEMONIC="YOUR_MNEMONIC" -e EXTRA_OPTS="-r" phala-phost:TAG_NAME`
+`docker run -ti --rm --name phala-phost -d -e PRUNTIME_ENDPOINT="http://YOUR_IP:8000" -e PHALA_NODE_WS_ENDPOINT="ws://YOUR_IP:9944" -e MNEMONIC="YOUR_MNEMONIC" -e EXTRA_OPTS="-r" phala-phost:TAG_NAME`
 
 Note:
 
 Remember start PHost after PhalaNode and Phost started to accept connections.
+
+If you're using Docker Compose or some sort of, you would adding `-e SLEEP_BEFORE_START=10` to ensure PRuntime started before starting PHost
 
 About `EXTRA_OPTS`:
 
