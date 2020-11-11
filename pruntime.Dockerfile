@@ -1,12 +1,12 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 ARG DEBIAN_FRONTEND='noninteractive'
-ARG RUST_TOOLCHAIN='nightly-2020-11-05'
+ARG RUST_TOOLCHAIN='nightly-2020-11-10'
 ARG PHALA_GIT_REPO='https://github.com/Phala-Network/phala-blockchain.git'
 ARG PHALA_GIT_TAG='master'
 
 ARG SGX_MODE="SW"
-ARG SGX_SDK_DOWNLOAD_URL="https://download.01.org/intel-sgx/sgx-linux/2.11/distro/ubuntu18.04-server/sgx_linux_x64_sdk_2.11.100.2.bin"
+ARG SGX_SDK_DOWNLOAD_URL="https://download.01.org/intel-sgx/sgx-linux/2.12/distro/ubuntu20.04-server/sgx_linux_x64_sdk_2.12.100.3.bin"
 ARG IAS_SPID=''
 ARG IAS_API_KEY=''
 ARG IAS_ENV='DEV'
@@ -17,7 +17,7 @@ WORKDIR /root
 
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 ca-certificates autoconf automake bison build-essential cmake dpkg-dev expect flex gcc-8 gdb git libboost-system-dev libboost-thread-dev libcurl4-openssl-dev libiptcdata0-dev libjsoncpp-dev liblog4cpp5-dev libprotobuf-c0-dev libprotobuf-dev libssl-dev libtool libxml2-dev ocaml ocamlbuild pkg-config protobuf-compiler python texinfo && \
+    apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates unzip lsb-release debhelper cmake reprepro autoconf automake bison build-essential curl dpkg-dev expect flex gcc gdb git git-core gnupg kmod libboost-system-dev libboost-thread-dev libcurl4-openssl-dev libiptcdata0-dev libjsoncpp-dev liblog4cpp5-dev libprotobuf-dev libssl-dev libtool libxml2-dev uuid-dev ocaml ocamlbuild pkg-config protobuf-compiler python texinfo llvm clang libclang-dev && \
     apt-get autoremove -y && \
     apt-get clean -y
 
@@ -44,7 +44,7 @@ RUN git clone --depth 1 --recurse-submodules --shallow-submodules -j 8 -b ${PHAL
 
 # ====
 
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 ARG DEBIAN_FRONTEND='noninteractive'
 
@@ -52,17 +52,17 @@ WORKDIR /root
 
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 ca-certificates && \
+    apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates && \
     apt-get autoremove -y && \
     apt-get clean -y
 
 ARG SGX_MODE="SW"
-ARG PSW_VERSION='2.11.100.2-bionic1'
+ARG PSW_VERSION='2.12.100.3-focal1'
 
 ENV SGX_MODE="$SGX_MODE"
 
 RUN curl -fsSL https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.key | apt-key add - && \
-    add-apt-repository "deb https://download.01.org/intel-sgx/sgx_repo/ubuntu bionic main" && \
+    add-apt-repository "deb https://download.01.org/intel-sgx/sgx_repo/ubuntu focal main" && \
     apt-get install -y \
         libsgx-aesm-launch-plugin="$PSW_VERSION" \
         libsgx-enclave-common="$PSW_VERSION" \

@@ -1,7 +1,7 @@
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 ARG DEBIAN_FRONTEND='noninteractive'
-ARG RUST_TOOLCHAIN='nightly-2020-11-05'
+ARG RUST_TOOLCHAIN='nightly-2020-11-10'
 ARG PHALA_GIT_REPO='https://github.com/Phala-Network/phala-blockchain.git'
 ARG PHALA_GIT_TAG='master'
 
@@ -9,7 +9,7 @@ WORKDIR /root
 
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 ca-certificates cmake pkg-config libssl-dev git build-essential llvm-10 clang-10 libclang-10-dev && \
+    apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates cmake pkg-config libssl-dev git build-essential llvm clang libclang-dev && \
     apt-get autoremove -y && \
     apt-get clean -y
 
@@ -28,7 +28,7 @@ RUN echo "Compiling Phala Blockchain from $PHALA_GIT_REPO:$PHALA_GIT_TAG..." && 
 
 # ====
 
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 ARG DEBIAN_FRONTEND='noninteractive'
 
@@ -36,7 +36,7 @@ WORKDIR /root
 
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 ca-certificates && \
+    apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates && \
     apt-get autoremove -y && \
     apt-get clean -y
 
