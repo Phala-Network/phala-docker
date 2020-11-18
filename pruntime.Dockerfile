@@ -58,13 +58,20 @@ RUN apt-get update && \
 
 ARG SGX_MODE="SW"
 ARG PSW_VERSION='2.12.100.3-focal1'
-
-ENV SGX_MODE="$SGX_MODE"
+ARG DCAP_VERSION='1.9.100.3-focal1'
 
 RUN curl -fsSL https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.key | apt-key add - && \
     add-apt-repository "deb https://download.01.org/intel-sgx/sgx_repo/ubuntu focal main" && \
     apt-get install -y \
+        libsgx-headers="$PSW_VERSION" \
+        libsgx-ae-epid="$PSW_VERSION" \
+        libsgx-ae-le="$PSW_VERSION" \
+        libsgx-ae-pce="$PSW_VERSION" \
+        libsgx-aesm-ecdsa-plugin="$PSW_VERSION" \
+        libsgx-aesm-epid-plugin="$PSW_VERSION" \
         libsgx-aesm-launch-plugin="$PSW_VERSION" \
+        libsgx-aesm-pce-plugin="$PSW_VERSION" \
+        libsgx-aesm-quote-ex-plugin="$PSW_VERSION" \
         libsgx-enclave-common="$PSW_VERSION" \
         libsgx-enclave-common-dev="$PSW_VERSION" \
         libsgx-epid="$PSW_VERSION" \
@@ -74,8 +81,16 @@ RUN curl -fsSL https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.k
         libsgx-quote-ex="$PSW_VERSION" \
         libsgx-quote-ex-dev="$PSW_VERSION" \
         libsgx-uae-service="$PSW_VERSION" \
-        libsgx-urts="$PSW_VERSION" && \
+        libsgx-urts="$PSW_VERSION" \
+        sgx-aesm-service="$PSW_VERSION" \
+        libsgx-ae-qe3="$DCAP_VERSION" \
+        libsgx-pce-logic="$DCAP_VERSION" \
+        libsgx-qe3-logic="$DCAP_VERSION" \
+        libsgx-ra-network="$DCAP_VERSION" \
+        libsgx-ra-uefi="$DCAP_VERSION" && \
     apt-get clean -y
+
+ENV SGX_MODE="$SGX_MODE"
 
 COPY --from=0 /opt/intel /opt/intel
 COPY --from=0 /root/enclave.signed.so .

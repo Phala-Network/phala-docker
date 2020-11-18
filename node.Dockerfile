@@ -40,11 +40,11 @@ RUN apt-get update && \
     apt-get autoremove -y && \
     apt-get clean -y
 
-ENV NODE_NAME='phala-node'
-ENV EXTRA_OPTS=''
-
 COPY --from=0 /root/phala-node .
 ADD dockerfile.d/start_node.sh ./start_node.sh
+
+ENV NODE_NAME='phala-node'
+ENV EXTRA_OPTS=''
 
 EXPOSE 9615
 EXPOSE 9933

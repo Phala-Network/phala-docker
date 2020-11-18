@@ -61,6 +61,18 @@ About `EXTRA_OPTS`:
 - `--heartbeat-interval 5` to control how many blocks that PHost send a heartbeat to the chain, default is `5`
 - `--fetch-heartbeat-from-buffer` is an advance control that PHost won't send heartbeat unless PRuntime generated one (`POST /ping` to PRuntime)
 
+### SGX Detect
+
+`sgx-detect` is a diagnostic tool, it requires you must have SGX hardware mode
+
+#### Build
+
+`docker build -f sgx_detect.Dockerfile -t sgx_detect:TAG_NAME .`
+
+#### Run
+
+`docker run -ti --rm --name sgx_detect --device /dev/sgx/enclave --device /dev/sgx/provision sgx_detect:TAG_NAME`
+
 ## Cheatsheets
 
 ### Clean build

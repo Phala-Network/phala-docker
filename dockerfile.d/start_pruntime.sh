@@ -17,6 +17,8 @@ else
   /bin/chmod 0750 /var/opt/aesmd/
 
   LD_LIBRARY_PATH=/opt/intel/sgx-aesm-service/aesm /opt/intel/sgx-aesm-service/aesm/aesm_service &
+
+  sleep 2
 fi
 
 mkdir -p "$STATE_FILE_PATH"

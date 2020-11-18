@@ -2,15 +2,17 @@
 # frozen_string_literal: true
 
 NODE_DOCKER_REPO = "phala-poc3-node"
-NODE_DOCKER_TAG = "v1"
+NODE_DOCKER_TAG = "v3"
 NODE_GIT_TAG = "master"
 
 PHOST_DOCKER_REPO = "phala-poc3-phost"
-PHOST_DOCKER_TAG = "v1"
+PHOST_DOCKER_TAG = "v3"
 PHOST_GIT_TAG = "master"
 
 PRUNTIME_DOCKER_REPO = "phala-poc3-pruntime"
-PRUNTIME_DOCKER_TAG = "v1"
+PRUNTIME_DOCKER_TAG = "v3"
+
+SGX_DETECT_DOCKER_REPO = "phala-sgx_detect"
 
 REGISTRIES = %w[jasl123 phalanetwork docker.pkg.github.com/phala-network/phala-docker]
 
@@ -62,6 +64,17 @@ REGISTRIES.each do |registry|
     "docker build -f prebuilt-pruntime.Dockerfile -t #{registry}/#{PRUNTIME_DOCKER_REPO} .",
     "docker push #{registry}/#{PRUNTIME_DOCKER_REPO}:#{PRUNTIME_DOCKER_TAG}",
     "docker push #{registry}/#{PRUNTIME_DOCKER_REPO}"
+  ].each do |cmd|
+    puts cmd
+    run cmd
+  end
+end
+
+# Build && Push SGX_Detect
+REGISTRIES.each do |registry|
+  [
+    "docker build -f sgx_detect.Dockerfile -t #{registry}/#{SGX_DETECT_DOCKER_REPO} .",
+    "docker push #{registry}/#{SGX_DETECT_DOCKER_REPO}"
   ].each do |cmd|
     puts cmd
     run cmd

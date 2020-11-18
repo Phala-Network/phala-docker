@@ -40,13 +40,13 @@ RUN apt-get update && \
     apt-get autoremove -y && \
     apt-get clean -y
 
+COPY --from=0 /root/phost .
+ADD dockerfile.d/start_phost.sh ./start_phost.sh
+
 ENV PRUNTIME_ENDPOINT='http://127.0.0.1:8000'
 ENV PHALA_NODE_WS_ENDPOINT='ws://127.0.0.1:9944'
 ENV MNEMONIC=''
 ENV EXTRA_OPTS='-r'
 ENV SLEEP_BEFORE_START=0
-
-COPY --from=0 /root/phost .
-ADD dockerfile.d/start_phost.sh ./start_phost.sh
 
 CMD bash ./start_phost.sh
