@@ -90,13 +90,14 @@ RUN curl -fsSL https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.k
         libsgx-ra-uefi="$DCAP_VERSION" && \
     apt-get clean -y
 
-ENV SGX_MODE="$SGX_MODE"
-
 COPY --from=0 /opt/intel /opt/intel
 COPY --from=0 /root/enclave.signed.so .
 COPY --from=0 /root/app .
 COPY --from=0 /root/Rocket.toml .
 ADD dockerfile.d/start_pruntime.sh ./start_pruntime.sh
+
+ENV SGX_MODE="$SGX_MODE"
+ENV SLEEP_BEFORE_START=2
 
 EXPOSE 8000
 

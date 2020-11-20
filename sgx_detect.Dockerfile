@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:18.04
 
 ARG DEBIAN_FRONTEND='noninteractive'
 ARG RUST_TOOLCHAIN='nightly-2020-11-10'
@@ -17,7 +17,7 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --de
 
 # ====
 
-FROM ubuntu:20.04
+FROM ubuntu:18.04
 
 ARG DEBIAN_FRONTEND='noninteractive'
 
@@ -29,11 +29,11 @@ RUN apt-get update && \
     apt-get autoremove -y && \
     apt-get clean -y
 
-ARG PSW_VERSION='2.12.100.3-focal1'
-ARG DCAP_VERSION='1.9.100.3-focal1'
+ARG PSW_VERSION='2.12.100.3-bionic1'
+ARG DCAP_VERSION='1.9.100.3-bionic1'
 
 RUN curl -fsSL https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.key | apt-key add - && \
-    add-apt-repository "deb https://download.01.org/intel-sgx/sgx_repo/ubuntu focal main" && \
+    add-apt-repository "deb https://download.01.org/intel-sgx/sgx_repo/ubuntu bionic main" && \
     apt-get install -y \
         libsgx-headers="$PSW_VERSION" \
         libsgx-ae-epid="$PSW_VERSION" \
@@ -63,6 +63,10 @@ RUN curl -fsSL https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.k
     apt-get clean -y
 
 COPY --from=0 /root/.cargo/bin/sgx-detect .
+ADD prebuilt/ra-test/app .
+ADD prebuilt/ra-test/enclave.signed.so .
 ADD dockerfile.d/start_sgx_detect.sh ./start_sgx_detect.sh
+
+ENV SLEEP_BEFORE_START=2
 
 CMD bash ./start_sgx_detect.sh

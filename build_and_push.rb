@@ -1,16 +1,18 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+GIT_TAG = "poc3-p1"
+
 NODE_DOCKER_REPO = "phala-poc3-node"
 NODE_DOCKER_TAG = "v3"
-NODE_GIT_TAG = "master"
+NODE_GIT_TAG = GIT_TAG
 
 PHOST_DOCKER_REPO = "phala-poc3-phost"
 PHOST_DOCKER_TAG = "v3"
-PHOST_GIT_TAG = "master"
+PHOST_GIT_TAG = GIT_TAG
 
 PRUNTIME_DOCKER_REPO = "phala-poc3-pruntime"
-PRUNTIME_DOCKER_TAG = "v3"
+PRUNTIME_DOCKER_TAG = "v4"
 
 SGX_DETECT_DOCKER_REPO = "phala-sgx_detect"
 
