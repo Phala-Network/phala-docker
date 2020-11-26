@@ -49,7 +49,7 @@ ADD prebuilt/pruntime/Rocket.toml .
 ADD dockerfile.d/start_pruntime.sh ./start_pruntime.sh
 
 ENV SGX_MODE="HW"
-ENV SLEEP_BEFORE_START=2
+ENV SLEEP_BEFORE_START=6
 
 EXPOSE 8000
 

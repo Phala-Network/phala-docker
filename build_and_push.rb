@@ -1,22 +1,26 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-GIT_TAG = "poc3-p1"
+GIT_TAG = "poc3-1.0"
 
 NODE_DOCKER_REPO = "phala-poc3-node"
-NODE_DOCKER_TAG = "v3"
+NODE_DOCKER_TAG = "1.0.0"
 NODE_GIT_TAG = GIT_TAG
 
 PHOST_DOCKER_REPO = "phala-poc3-phost"
-PHOST_DOCKER_TAG = "v3"
+PHOST_DOCKER_TAG = "1.0.0"
 PHOST_GIT_TAG = GIT_TAG
 
 PRUNTIME_DOCKER_REPO = "phala-poc3-pruntime"
-PRUNTIME_DOCKER_TAG = "v4"
+PRUNTIME_DOCKER_TAG = "1.0.0"
 
 SGX_DETECT_DOCKER_REPO = "phala-sgx_detect"
 
-REGISTRIES = %w[jasl123 phalanetwork docker.pkg.github.com/phala-network/phala-docker]
+REGISTRIES = [
+  "jasl123",
+  "phalanetwork",
+  "docker.pkg.github.com/phala-network/phala-docker"
+]
 
 require "open3"
 
@@ -30,6 +34,30 @@ def run(cmd)
     unless exit_status.success?
       abort "error"
     end
+  end
+end
+
+# Build && Push Phala-PRuntime
+REGISTRIES.each do |registry|
+  [
+    "docker build -f prebuilt-pruntime.Dockerfile -t #{registry}/#{PRUNTIME_DOCKER_REPO}:#{PRUNTIME_DOCKER_TAG} .",
+    "docker build -f prebuilt-pruntime.Dockerfile -t #{registry}/#{PRUNTIME_DOCKER_REPO} .",
+    "docker push #{registry}/#{PRUNTIME_DOCKER_REPO}:#{PRUNTIME_DOCKER_TAG}",
+    "docker push #{registry}/#{PRUNTIME_DOCKER_REPO}"
+  ].each do |cmd|
+    puts cmd
+    run cmd
+  end
+end
+
+# Build && Push SGX_Detect
+REGISTRIES.each do |registry|
+  [
+    "docker build -f sgx_detect.Dockerfile -t #{registry}/#{SGX_DETECT_DOCKER_REPO} .",
+    "docker push #{registry}/#{SGX_DETECT_DOCKER_REPO}"
+  ].each do |cmd|
+    puts cmd
+    run cmd
   end
 end
 
@@ -53,30 +81,6 @@ REGISTRIES.each do |registry|
     "docker build --build-arg PHALA_GIT_TAG=#{PHOST_GIT_TAG} -f phost.Dockerfile -t #{registry}/#{PHOST_DOCKER_REPO} .",
     "docker push #{registry}/#{PHOST_DOCKER_REPO}:#{PHOST_DOCKER_TAG}",
     "docker push #{registry}/#{PHOST_DOCKER_REPO}"
-  ].each do |cmd|
-    puts cmd
-    run cmd
-  end
-end
-
-# Build && Push Phala-PRuntime
-REGISTRIES.each do |registry|
-  [
-    "docker build -f prebuilt-pruntime.Dockerfile -t #{registry}/#{PRUNTIME_DOCKER_REPO}:#{PRUNTIME_DOCKER_TAG} .",
-    "docker build -f prebuilt-pruntime.Dockerfile -t #{registry}/#{PRUNTIME_DOCKER_REPO} .",
-    "docker push #{registry}/#{PRUNTIME_DOCKER_REPO}:#{PRUNTIME_DOCKER_TAG}",
-    "docker push #{registry}/#{PRUNTIME_DOCKER_REPO}"
-  ].each do |cmd|
-    puts cmd
-    run cmd
-  end
-end
-
-# Build && Push SGX_Detect
-REGISTRIES.each do |registry|
-  [
-    "docker build -f sgx_detect.Dockerfile -t #{registry}/#{SGX_DETECT_DOCKER_REPO} .",
-    "docker push #{registry}/#{SGX_DETECT_DOCKER_REPO}"
   ].each do |cmd|
     puts cmd
     run cmd

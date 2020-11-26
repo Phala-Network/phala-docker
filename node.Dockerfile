@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:20.04 AS builder
 
 ARG DEBIAN_FRONTEND='noninteractive'
 ARG RUST_TOOLCHAIN='nightly-2020-11-10'
@@ -40,7 +40,7 @@ RUN apt-get update && \
     apt-get autoremove -y && \
     apt-get clean -y
 
-COPY --from=0 /root/phala-node .
+COPY --from=builder /root/phala-node .
 ADD dockerfile.d/start_node.sh ./start_node.sh
 
 ENV NODE_NAME='phala-node'

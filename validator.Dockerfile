@@ -40,13 +40,15 @@ RUN apt-get update && \
     apt-get autoremove -y && \
     apt-get clean -y
 
-COPY --from=builder /root/phost .
-ADD dockerfile.d/start_phost.sh ./start_phost.sh
+COPY --from=builder /root/phala-node .
+ADD dockerfile.d/start_validator.sh ./start_validator.sh
 
-ENV PRUNTIME_ENDPOINT='http://127.0.0.1:8000'
-ENV PHALA_NODE_WS_ENDPOINT='ws://127.0.0.1:9944'
-ENV MNEMONIC=''
-ENV EXTRA_OPTS='-r'
-ENV SLEEP_BEFORE_START=0
+ENV NODE_NAME='phala-validator'
+ENV EXTRA_OPTS='--ws-external --rpc-external --unsafe-ws-external --unsafe-rpc-external --rpc-cors all'
 
-CMD bash ./start_phost.sh
+EXPOSE 9615
+EXPOSE 9933
+EXPOSE 9944
+EXPOSE 30333
+
+CMD bash ./start_validator.sh

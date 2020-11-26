@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:20.04 AS builder
 
 ARG DEBIAN_FRONTEND='noninteractive'
 ARG RUST_TOOLCHAIN='nightly-2020-11-10'
@@ -62,11 +62,11 @@ RUN curl -fsSL https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.k
         libsgx-ra-uefi="$DCAP_VERSION" && \
     apt-get clean -y
 
-COPY --from=0 /root/.cargo/bin/sgx-detect .
+COPY --from=builder /root/.cargo/bin/sgx-detect .
 ADD prebuilt/ra-test/app .
 ADD prebuilt/ra-test/enclave.signed.so .
 ADD dockerfile.d/start_sgx_detect.sh ./start_sgx_detect.sh
 
-ENV SLEEP_BEFORE_START=2
+ENV SLEEP_BEFORE_START=6
 
 CMD bash ./start_sgx_detect.sh
