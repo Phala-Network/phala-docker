@@ -13,7 +13,7 @@ This repo contains dockerfiles for deployment
 
 #### Run
 
-`docker run -ti --rm --name phala-node -d -e NODE_NAME=my-phala-node -p 9615:9615 -p 9933:9933 -p 9944:9944 -p 30333:30333 -v $(pwd)/data:/root/data phala-node:TAG_NAME`
+`docker run -dti --rm --name phala-node -e NODE_NAME=my-phala-node -p 9615:9615 -p 9933:9933 -p 9944:9944 -p 30333:30333 -v $(pwd)/data:/root/data phala-node:TAG_NAME`
 
 ### PRuntime
 
@@ -33,11 +33,11 @@ Hardware mode
 
 Software mode
 
-`docker run -ti --rm --name phala-pruntime -d -p 8000:8000 -v $(pwd)/data:/root/data phala-pruntime:TAG_NAME`
+`docker run -dti --rm --name phala-pruntime -p 8000:8000 -v $(pwd)/data:/root/data phala-pruntime:TAG_NAME`
 
 Hardware mode
 
-`docker run -ti --rm --name phala-pruntime -d -p 8000:8000 -v $(pwd)/data:/root/data --device /dev/sgx/enclave --device /dev/sgx/provision phala-pruntime:TAG_NAME`
+`docker run -dti --rm --name phala-pruntime -p 8000:8000 -v $(pwd)/data:/root/data --device /dev/sgx/enclave --device /dev/sgx/provision phala-pruntime:TAG_NAME`
 
 ### PHost
 
@@ -47,7 +47,11 @@ Hardware mode
 
 #### Run
 
-`docker run -ti --rm --name phala-phost -d -e PRUNTIME_ENDPOINT="http://YOUR_IP:8000" -e PHALA_NODE_WS_ENDPOINT="ws://YOUR_IP:9944" -e MNEMONIC="YOUR_MNEMONIC" -e EXTRA_OPTS="-r" phala-phost:TAG_NAME`
+`docker run -dti --rm --name phala-phost -e PRUNTIME_ENDPOINT="http://YOUR_IP:8000" -e PHALA_NODE_WS_ENDPOINT="ws://YOUR_IP:9944" -e MNEMONIC="YOUR_MNEMONIC" -e EXTRA_OPTS="-r" phala-phost:TAG_NAME`
+
+If PhalNode and PRuntime runs in the same PC, you can use `--link` to connect them
+
+`docker run -dti --rm --name phala-phost -e PRUNTIME_ENDPOINT="http://phala-pruntime:8000" -e PHALA_NODE_WS_ENDPOINT="ws://phala-node:9944" -e MNEMONIC="YOUR_MNEMONIC" -e EXTRA_OPTS="-r" --link phala-node --link phala-pruntime phala-phost:TAG_NAME`
 
 Note:
 

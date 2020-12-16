@@ -2,18 +2,18 @@
 # frozen_string_literal: true
 
 BUILD_ONLY = false
-GIT_TAG = "poc3-1.0.3"
+GIT_TAG = "poc3-1.0.9"
 
 NODE_DOCKER_REPO = "phala-poc3-node"
-NODE_DOCKER_TAG = "poc3-1.0.3"
+NODE_DOCKER_TAG = "poc3-1.0.9"
 NODE_GIT_TAG = GIT_TAG
 
 PHOST_DOCKER_REPO = "phala-poc3-phost"
-PHOST_DOCKER_TAG = "poc3-1.0.3"
+PHOST_DOCKER_TAG = "poc3-1.0.9"
 PHOST_GIT_TAG = GIT_TAG
 
 PRUNTIME_DOCKER_REPO = "phala-poc3-pruntime"
-PRUNTIME_DOCKER_TAG = "poc3-1.0.3"
+PRUNTIME_DOCKER_TAG = "poc3-1.0.9"
 
 SGX_DETECT_DOCKER_REPO = "phala-sgx_detect"
 
@@ -38,27 +38,27 @@ def run(cmd)
   end
 end
 
-# # Build SGX_Detect
-# REGISTRIES.each do |registry|
-#   [
-#     "docker build -f sgx_detect.Dockerfile -t #{registry}/#{SGX_DETECT_DOCKER_REPO} ."
-#   ].each do |cmd|
-#     puts cmd
-#     run cmd
-#   end
-# end
+# Build SGX_Detect
+REGISTRIES.each do |registry|
+  [
+    "docker build -f sgx_detect.Dockerfile -t #{registry}/#{SGX_DETECT_DOCKER_REPO} ."
+  ].each do |cmd|
+    puts cmd
+    run cmd
+  end
+end
 
-# unless BUILD_ONLY
-#   # Push SGX_Detect
-#   REGISTRIES.each do |registry|
-#     [
-#       "docker push #{registry}/#{SGX_DETECT_DOCKER_REPO}"
-#     ].each do |cmd|
-#       puts cmd
-#       run cmd
-#     end
-#   end
-# end
+unless BUILD_ONLY
+  # Push SGX_Detect
+  REGISTRIES.each do |registry|
+    [
+      "docker push #{registry}/#{SGX_DETECT_DOCKER_REPO}"
+    ].each do |cmd|
+      puts cmd
+      run cmd
+    end
+  end
+end
 
 # Build Phala-PRuntime
 REGISTRIES.each do |registry|
