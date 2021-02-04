@@ -6,7 +6,7 @@ ARG PHALA_GIT_REPO='https://github.com/Phala-Network/phala-blockchain.git'
 ARG PHALA_GIT_TAG='master'
 
 ARG SGX_MODE="SW"
-ARG SGX_SDK_DOWNLOAD_URL="https://download.01.org/intel-sgx/sgx-linux/2.12/distro/ubuntu20.04-server/sgx_linux_x64_sdk_2.12.100.3.bin"
+ARG SGX_SDK_DOWNLOAD_URL="https://download.01.org/intel-sgx/sgx-linux/2.13/distro/ubuntu20.04-server/sgx_linux_x64_sdk_2.13.100.4.bin"
 ARG IAS_SPID=''
 ARG IAS_API_KEY=''
 ARG IAS_ENV='DEV'
@@ -57,8 +57,8 @@ RUN apt-get update && \
     apt-get clean -y
 
 ARG SGX_MODE="SW"
-ARG PSW_VERSION='2.12.100.3-focal1'
-ARG DCAP_VERSION='1.9.100.3-focal1'
+ARG PSW_VERSION='2.13.100.4-focal1'
+ARG DCAP_VERSION='1.10.100.4-focal1'
 
 RUN curl -fsSL https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.key | apt-key add - && \
     add-apt-repository "deb https://download.01.org/intel-sgx/sgx_repo/ubuntu focal main" && \

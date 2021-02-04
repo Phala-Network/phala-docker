@@ -29,8 +29,8 @@ RUN apt-get update && \
     apt-get autoremove -y && \
     apt-get clean -y
 
-ARG PSW_VERSION='2.12.100.3-bionic1'
-ARG DCAP_VERSION='1.9.100.3-bionic1'
+ARG PSW_VERSION='2.13.100.4-bionic1'
+ARG DCAP_VERSION='1.10.100.4-bionic1'
 
 RUN curl -fsSL https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.key | apt-key add - && \
     add-apt-repository "deb https://download.01.org/intel-sgx/sgx_repo/ubuntu bionic main" && \
