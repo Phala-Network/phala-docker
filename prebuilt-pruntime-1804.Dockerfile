@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:18.04
 
 ARG DEBIAN_FRONTEND='noninteractive'
 
@@ -6,15 +6,15 @@ WORKDIR /root
 
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates && \
+    apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 ca-certificates && \
     apt-get autoremove -y && \
     apt-get clean -y
 
-ARG PSW_VERSION='2.13.100.4-focal1'
-ARG DCAP_VERSION='1.10.100.4-focal1'
+ARG PSW_VERSION='2.13.100.4-bionic1'
+ARG DCAP_VERSION='1.10.100.4-bionic1'
 
 RUN curl -fsSL https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.key | apt-key add - && \
-    add-apt-repository "deb https://download.01.org/intel-sgx/sgx_repo/ubuntu focal main" && \
+    add-apt-repository "deb https://download.01.org/intel-sgx/sgx_repo/ubuntu bionic main" && \
     apt-get install -y \
         libsgx-headers="$PSW_VERSION" \
         libsgx-ae-epid="$PSW_VERSION" \
