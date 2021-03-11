@@ -33,7 +33,7 @@ RUN echo "Compiling Phala Blockchain from $PHALA_GIT_REPO:$PHALA_GIT_TAG..." && 
     rm -rf ./sgx_linux_sdk.bin
 
 RUN git clone --depth 1 --recurse-submodules --shallow-submodules -j 8 -b ${PHALA_GIT_TAG} ${PHALA_GIT_REPO} phala-blockchain && \
-    cd phala-blockchain/pruntime && \
+    cd phala-blockchain/standalone/pruntime && \
     PATH="$PATH:$HOME/.cargo/bin" SGX_SDK="/opt/intel/sgxsdk" SGX_MODE="$SGX_MODE" make && \
     cp ./bin/app /root/ && \
     cp ./bin/enclave.signed.so /root/ && \
