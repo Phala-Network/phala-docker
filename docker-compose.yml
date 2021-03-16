@@ -1,0 +1,88 @@
+# pdiem M3 demo
+#
+# This demo environment will set up:
+# - A single-node diem testnet
+# - A cli to interact with diem testnet
+# - A full Phala Network devopment network (phala-node, pruntime, phost) with pDiem deployed
+# - A pdiem relayer
+
+version: "3.9"
+services:
+  diem:
+    build:
+      context: .
+      dockerfile: diem.Dockerfile
+    volumes:
+      - diem-data:/var/diem-data
+    entrypoint: [
+      "/root/diem-node",
+      "--test", "--config", "/var/diem-data"
+    ]
+
+  diem-cli:
+    # This service does nothing, rather than provide a template that allows you to spawn your own
+    # interactive shell to run diem cli. To start, run:
+    #   docker-compose run --rm --entrypoint /bin/bash -- diem-cli
+    build:
+      context: .
+      dockerfile: diem.Dockerfile
+    volumes:
+      - diem-data:/var/diem-data
+    environment:
+      HOST: diem
+    entrypoint: "/bin/true"
+
+  phala-node:
+    build:
+      context: .
+      dockerfile: node.Dockerfile
+    ports:
+      - 9944:9944
+      - 9933:9933
+    entrypoint: [
+      "/root/phala-node",
+      "--dev", "--tmp", "--unsafe-ws-external"
+    ]
+  
+  phala-pruntime:
+    build:
+      context: .
+      dockerfile: pruntime.Dockerfile
+    ports:
+      - 8000:8000
+    entrypoint: ["/bin/bash", "start_pruntime.sh"]
+  
+  phala-phost:
+    build:
+      context: .
+      dockerfile: phost.Dockerfile
+    depends_on:
+      - phala-node
+      - phala-pruntime
+    restart: on-failure
+    entrypoint: [
+      "/root/phost",
+      "--dev",
+      "--substrate-ws-endpoint=ws://phala-node:9944",
+      "--pruntime-endpoint=http://phala-pruntime:8000",
+    ]
+  
+  pdiem-relayer:
+    build:
+      context: .
+      dockerfile: pdiem-relayer.Dockerfile
+    depends_on:
+      - diem
+      - phala-node
+      - phala-pruntime
+    # Restart until diem and pruntime are ready
+    restart: on-failure
+    entrypoint: [
+      "/root/pdiem",
+      "--diem-rpc-endpoint=http://diem:8080",
+      "--substrate-ws-endpoint=ws://phala-node:9944",
+      "--pruntime-endpoint=http://phala-pruntime:8000",
+    ]
+    
+volumes:
+  diem-data:
