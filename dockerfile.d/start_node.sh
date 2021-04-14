@@ -7,7 +7,7 @@ echo "Starting PhalaNode with extra opts '${EXTRA_OPTS}'"
 ./phala-node \
   --chain "phala" \
   --base-path "$HOME/data" \
-  --database paritydb \
+  --database paritydb-experimental \
   --name $NODE_NAME \
   --pruning archive \
   --rpc-port 9933 \

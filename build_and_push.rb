@@ -2,24 +2,27 @@
 # frozen_string_literal: true
 
 BUILD_ONLY = false
-GIT_TAG = "poc3-1.2.1"
+GIT_TAG = "master"
 
-NODE_DOCKER_REPO = "phala-poc3-node"
-NODE_DOCKER_TAG = "poc3-1.2.1"
+COMMON_CHAIN_NAME = "dev"
+COMMON_TAG = "21041503"
+
+NODE_DOCKER_REPO = "phala-#{COMMON_CHAIN_NAME}-node"
+NODE_DOCKER_TAG = COMMON_TAG
 NODE_GIT_TAG = GIT_TAG
 
-PHOST_DOCKER_REPO = "phala-poc3-phost"
-PHOST_DOCKER_TAG = "poc3-1.2.1"
+PHOST_DOCKER_REPO = "phala-#{COMMON_CHAIN_NAME}-phost"
+PHOST_DOCKER_TAG = COMMON_TAG
 PHOST_GIT_TAG = GIT_TAG
 
-PRUNTIME_DOCKER_REPO = "phala-poc3-pruntime"
-PRUNTIME_DOCKER_TAG = "poc3-1.2.1"
+PRUNTIME_DOCKER_REPO = "phala-#{COMMON_CHAIN_NAME}-pruntime"
+PRUNTIME_DOCKER_TAG = COMMON_TAG
 
 SGX_DETECT_DOCKER_REPO = "phala-sgx_detect"
 
 REGISTRIES = [
   "jasl123",
-  # "phalanetwork",
+  "phalanetwork",
   # "docker.pkg.github.com/phala-network/phala-docker"
 ]
 

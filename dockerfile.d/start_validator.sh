@@ -7,7 +7,7 @@ echo "Starting Phala Validator with extra opts '${EXTRA_OPTS}'"
 ./phala-node \
   --chain "phala" \
   --base-path "$HOME/data" \
-  --database paritydb \
+  --database paritydb-experimental \
   --name $NODE_NAME \
   --validator \
   --rpc-port 9933 \
