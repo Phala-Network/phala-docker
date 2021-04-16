@@ -1,7 +1,7 @@
 FROM ubuntu:20.04 AS builder
 
 ARG DEBIAN_FRONTEND='noninteractive'
-ARG RUST_TOOLCHAIN='nightly-2020-11-10'
+ARG RUST_TOOLCHAIN='nightly-2021-03-25'
 ARG GIT_REPO='https://github.com/Phala-Network/pdiem-relayer.git'
 ARG GIT_TAG='pdiem-m3'
 
@@ -15,7 +15,7 @@ RUN apt-get update && \
 
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain="${RUST_TOOLCHAIN}"
 
-RUN echo "Compiling Phala Blockchain from $GIT_REPO:$GIT_TAG..." && \
+RUN echo "Compiling pDiem Relayer from $GIT_REPO:$GIT_TAG..." && \
     git clone --depth 1 --recurse-submodules --shallow-submodules -j 8 -b ${GIT_TAG} ${GIT_REPO} pdiem-relayer && \
     cd pdiem-relayer && \
     PATH="$HOME/.cargo/bin:$PATH" cargo build --release && \

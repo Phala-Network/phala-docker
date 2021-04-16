@@ -3,7 +3,7 @@ FROM ubuntu:20.04 AS builder
 ARG DEBIAN_FRONTEND='noninteractive'
 ARG RUST_TOOLCHAIN='nightly-2020-03-25'
 ARG PHALA_GIT_REPO='https://github.com/Phala-Network/phala-blockchain.git'
-ARG PHALA_GIT_TAG='master'
+ARG PHALA_GIT_TAG='pdiem-m3'
 
 ARG SGX_MODE="SW"
 ARG SGX_SDK_DOWNLOAD_URL="https://download.01.org/intel-sgx/sgx-linux/2.13/distro/ubuntu20.04-server/sgx_linux_x64_sdk_2.13.100.4.bin"
@@ -23,7 +23,7 @@ RUN apt-get update && \
 
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain="${RUST_TOOLCHAIN}"
 
-RUN echo "Compiling Phala Blockchain from $PHALA_GIT_REPO:$PHALA_GIT_TAG..." && \
+RUN echo "Compiling Phala pRuntime from $PHALA_GIT_REPO:$PHALA_GIT_TAG..." && \
     cd /root && \
     wget "$SGX_SDK_DOWNLOAD_URL" -t 3 -O sgx_linux_sdk.bin && \
     chmod +x ./sgx_linux_sdk.bin && \

@@ -83,6 +83,15 @@ services:
       "--substrate-ws-endpoint=ws://phala-node:9944",
       "--pruntime-endpoint=http://phala-pruntime:8000",
     ]
+
+  phala-console:
+    build:
+      context: .
+      dockerfile: phala-console.Dockerfile
+    depends_on:
+      - phala-node
+      - phala-pruntime
+    entrypoint: "/bin/true"
     
 volumes:
   diem-data:

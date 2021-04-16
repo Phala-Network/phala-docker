@@ -3,7 +3,7 @@ FROM ubuntu:20.04 AS builder
 ARG DEBIAN_FRONTEND='noninteractive'
 ARG RUST_TOOLCHAIN='nightly-2020-03-25'
 ARG PHALA_GIT_REPO='https://github.com/Phala-Network/phala-blockchain.git'
-ARG PHALA_GIT_TAG='master'
+ARG PHALA_GIT_TAG='pdiem-m3'
 
 WORKDIR /root
 
