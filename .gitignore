@@ -3,3 +3,5 @@
 
 /prebuilt/**/*
 !/prebuilt/.keep
+
+node_modules
