@@ -1,7 +1,7 @@
 FROM ubuntu:18.04 AS builder
 
 ARG DEBIAN_FRONTEND='noninteractive'
-ARG RUST_TOOLCHAIN='nightly-2020-03-25'
+ARG RUST_TOOLCHAIN='nightly-2020-04-20'
 
 WORKDIR /root
 
