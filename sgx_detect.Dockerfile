@@ -1,7 +1,7 @@
-FROM ubuntu:18.04 AS builder
+FROM ubuntu:20.04 AS builder
 
 ARG DEBIAN_FRONTEND='noninteractive'
-ARG RUST_TOOLCHAIN='nightly-2020-04-20'
+ARG RUST_TOOLCHAIN='nightly-2020-05-11'
 
 WORKDIR /root
 
@@ -17,7 +17,7 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --de
 
 # ====
 
-FROM ubuntu:18.04
+FROM ubuntu:20.04
 
 ARG DEBIAN_FRONTEND='noninteractive'
 
@@ -29,11 +29,11 @@ RUN apt-get update && \
     apt-get autoremove -y && \
     apt-get clean -y
 
-ARG PSW_VERSION='2.13.100.4-bionic1'
-ARG DCAP_VERSION='1.10.100.4-bionic1'
+ARG PSW_VERSION='2.13.103.1-focal1'
+ARG DCAP_VERSION='1.10.103.1-focal1'
 
 RUN curl -fsSL https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.key | apt-key add - && \
-    add-apt-repository "deb https://download.01.org/intel-sgx/sgx_repo/ubuntu bionic main" && \
+    add-apt-repository "deb https://download.01.org/intel-sgx/sgx_repo/ubuntu focal main" && \
     apt-get install -y \
         libsgx-headers="$PSW_VERSION" \
         libsgx-ae-epid="$PSW_VERSION" \

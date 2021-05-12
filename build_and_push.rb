@@ -5,7 +5,7 @@ BUILD_ONLY = false
 GIT_TAG = "master"
 
 COMMON_CHAIN_NAME = "dev"
-COMMON_TAG = "21042102"
+COMMON_TAG = "21051301"
 
 NODE_DOCKER_REPO = "phala-#{COMMON_CHAIN_NAME}-node"
 NODE_DOCKER_TAG = COMMON_TAG
@@ -23,7 +23,8 @@ SGX_DETECT_DOCKER_REPO = "phala-sgx_detect"
 REGISTRIES = [
   "jasl123",
   "phalanetwork",
-  # "docker.pkg.github.com/phala-network/phala-docker"
+  "swr.cn-east-3.myhuaweicloud.com/phala",
+  "docker.pkg.github.com/phala-network/phala-docker"
 ]
 
 require "open3"
