@@ -8,7 +8,7 @@ then
   sleep "$SLEEP_BEFORE_START"
 fi
 
-echo "Starting PHost with extra opts '${EXTRA_OPTS}'"
+echo "Starting pHost with extra opts '${EXTRA_OPTS}'"
 
 ./phost \
   --pruntime-endpoint "$PRUNTIME_ENDPOINT" \

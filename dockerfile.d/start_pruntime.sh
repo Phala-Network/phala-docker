@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+echo "Starting pRuntime with extra opts '${EXTRA_OPTS}'"
+
 STATE_FILE_PATH=${STATE_FILE_PATH:-"data"}
 
 if [ "$SGX_MODE" == "SW" ]
@@ -28,4 +30,4 @@ else
 fi
 
 mkdir -p "$STATE_FILE_PATH"
-STATE_FILE_PATH="$STATE_FILE_PATH" ./app
+STATE_FILE_PATH="$STATE_FILE_PATH" ./app $EXTRA_OPTS

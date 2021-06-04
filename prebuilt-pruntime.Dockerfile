@@ -50,6 +50,7 @@ ADD dockerfile.d/start_pruntime.sh ./start_pruntime.sh
 
 ENV SGX_MODE="HW"
 ENV SLEEP_BEFORE_START=6
+ENV EXTRA_OPTS=''
 
 EXPOSE 8000
 
