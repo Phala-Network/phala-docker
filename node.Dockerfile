@@ -36,7 +36,7 @@ WORKDIR /root
 
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates && \
+    apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates tini && \
     apt-get autoremove -y && \
     apt-get clean -y
 
@@ -51,4 +51,6 @@ EXPOSE 9933
 EXPOSE 9944
 EXPOSE 30333
 
-CMD bash ./start_node.sh
+ENTRYPOINT ["/usr/bin/tini", "--"]
+
+CMD ["/bin/bash", "./start_node.sh"]
