@@ -8,10 +8,7 @@ ARG PHALA_GIT_TAG='master'
 WORKDIR /root
 
 RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates cmake pkg-config libssl-dev git build-essential llvm clang libclang-dev && \
-    apt-get autoremove -y && \
-    apt-get clean -y
+    apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates cmake pkg-config libssl-dev git build-essential llvm clang libclang-dev
 
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain="${RUST_TOOLCHAIN}" && \
     $HOME/.cargo/bin/rustup target add wasm32-unknown-unknown --toolchain "${RUST_TOOLCHAIN}"
@@ -35,10 +32,7 @@ ARG DEBIAN_FRONTEND='noninteractive'
 WORKDIR /root
 
 RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates && \
-    apt-get autoremove -y && \
-    apt-get clean -y
+    apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates tini
 
 COPY --from=builder /root/phala-node .
 ADD dockerfile.d/start_node.sh ./start_node.sh
@@ -51,4 +45,6 @@ EXPOSE 9933
 EXPOSE 9944
 EXPOSE 30333
 
-CMD bash ./start_node.sh
+ENTRYPOINT ["/usr/bin/tini", "--"]
+
+CMD ["/bin/bash", "./start_node.sh"]
