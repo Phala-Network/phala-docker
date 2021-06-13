@@ -5,10 +5,7 @@ ARG DEBIAN_FRONTEND='noninteractive'
 WORKDIR /root
 
 RUN apt-get update && \
-    apt-get upgrade -y && \
-    apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates && \
-    apt-get autoremove -y && \
-    apt-get clean -y
+    apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates tini
 
 ARG PSW_VERSION='2.13.103.1-focal1'
 ARG DCAP_VERSION='1.10.103.1-focal1'
@@ -54,4 +51,6 @@ ENV EXTRA_OPTS=''
 
 EXPOSE 8000
 
-CMD bash ./start_pruntime.sh
+ENTRYPOINT ["/usr/bin/tini", "--"]
+
+CMD ["/bin/bash", "./start_pruntime.sh"]
