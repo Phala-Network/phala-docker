@@ -62,8 +62,6 @@ If you're using Docker Compose or some sort of, you would adding `-e SLEEP_BEFOR
 About `EXTRA_OPTS`:
 
 - `-r` means enable remote attestation flow, this must be set if you wanna join the public chain network, and can only be enabled on Hardware mode
-- `--heartbeat-interval 5` to control how many blocks that PHost send a heartbeat to the chain, default is `5`
-- `--fetch-heartbeat-from-buffer` is an advance control that PHost won't send heartbeat unless PRuntime generated one (`POST /ping` to PRuntime)
 
 ### SGX Detect
 
