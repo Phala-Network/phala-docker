@@ -15,5 +15,6 @@ echo "Starting PhalaNode with extra opts '${EXTRA_OPTS}'"
   --ws-external \
   --prometheus-external \
   --rpc-external \
+  --rpc-methods Unsafe \
   --rpc-cors all \
   $EXTRA_OPTS
