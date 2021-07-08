@@ -5,7 +5,7 @@ BUILD_ONLY = false
 GIT_TAG = "master"
 
 COMMON_CHAIN_NAME = "dev"
-COMMON_TAG = "21070601"
+COMMON_TAG = "21070901"
 
 NODE_DOCKER_REPO = "phala-#{COMMON_CHAIN_NAME}-node"
 NODE_DOCKER_TAG = COMMON_TAG
@@ -18,7 +18,11 @@ PHOST_GIT_TAG = GIT_TAG
 PRUNTIME_DOCKER_REPO = "phala-#{COMMON_CHAIN_NAME}-pruntime"
 PRUNTIME_DOCKER_TAG = COMMON_TAG
 
+PRUNTIME_BENCH_DOCKER_REPO = "phala-#{COMMON_CHAIN_NAME}-pruntime-bench"
+PRUNTIME_BENCH_DOCKER_TAG = COMMON_TAG
+
 SGX_DETECT_DOCKER_REPO = "phala-sgx_detect"
+
 
 REGISTRIES = [
   "jasl123",
@@ -64,7 +68,7 @@ end
 #   end
 # end
 
-# Build Phala-PRuntime
+# Build Phala-pRuntime
 REGISTRIES.each do |registry|
   [
     "docker build -f prebuilt-pruntime.Dockerfile -t #{registry}/#{PRUNTIME_DOCKER_REPO}:#{PRUNTIME_DOCKER_TAG} .",
@@ -76,11 +80,36 @@ REGISTRIES.each do |registry|
 end
 
 unless BUILD_ONLY
-  # Push Phala-PRuntime
+  # Push Phala-pRuntime
   REGISTRIES.each do |registry|
     [
       "docker push #{registry}/#{PRUNTIME_DOCKER_REPO}:#{PRUNTIME_DOCKER_TAG}",
       "docker push #{registry}/#{PRUNTIME_DOCKER_REPO}"
+    ].each do |cmd|
+      puts cmd
+      run cmd
+    end
+  end
+end
+
+# Build Phala-pRuntime-bench
+# Phala-pRuntime-bench shares the same Dockerfile with Phala-pRuntime
+REGISTRIES.each do |registry|
+  [
+    "docker build -f prebuilt-pruntime.Dockerfile -t #{registry}/#{PRUNTIME_BENCH_DOCKER_REPO}:#{PRUNTIME_BENCH_DOCKER_TAG} .",
+    "docker build -f prebuilt-pruntime.Dockerfile -t #{registry}/#{PRUNTIME_BENCH_DOCKER_REPO} ."
+  ].each do |cmd|
+    puts cmd
+    run cmd
+  end
+end
+
+unless BUILD_ONLY
+  # Push Phala-pRuntime-bench
+  REGISTRIES.each do |registry|
+    [
+      "docker push #{registry}/#{PRUNTIME_BENCH_DOCKER_REPO}:#{PRUNTIME_BENCH_DOCKER_TAG}",
+      "docker push #{registry}/#{PRUNTIME_BENCH_DOCKER_REPO}"
     ].each do |cmd|
       puts cmd
       run cmd
@@ -112,7 +141,7 @@ unless BUILD_ONLY
   end
 end
 
-# Build Phala-PHost
+# Build Phala-pHost
 REGISTRIES.each do |registry|
   [
     "docker build --build-arg PHALA_GIT_TAG=#{PHOST_GIT_TAG} -f phost.Dockerfile -t #{registry}/#{PHOST_DOCKER_REPO}:#{PHOST_DOCKER_TAG} .",
@@ -124,7 +153,7 @@ REGISTRIES.each do |registry|
 end
 
 unless BUILD_ONLY
-  # Push Phala-PHost
+  # Push Phala-pHost
   REGISTRIES.each do |registry|
     [
       "docker push #{registry}/#{PHOST_DOCKER_REPO}:#{PHOST_DOCKER_TAG}",
