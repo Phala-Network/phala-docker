@@ -37,6 +37,7 @@ RUN apt-get update && \
 COPY --from=builder /root/phost .
 ADD dockerfile.d/start_phost.sh ./start_phost.sh
 
+ENV RUST_LOG="info"
 ENV PRUNTIME_ENDPOINT='http://127.0.0.1:8000'
 ENV PHALA_NODE_WS_ENDPOINT='ws://127.0.0.1:9944'
 ENV MNEMONIC=''

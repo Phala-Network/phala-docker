@@ -45,6 +45,7 @@ ADD prebuilt/pruntime/enclave.signed.so .
 ADD prebuilt/pruntime/Rocket.toml .
 ADD dockerfile.d/start_pruntime.sh ./start_pruntime.sh
 
+ENV RUST_LOG="info"
 ENV SGX_MODE="HW"
 ENV SLEEP_BEFORE_START=6
 ENV EXTRA_OPTS=''

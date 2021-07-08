@@ -37,6 +37,7 @@ RUN apt-get update && \
 COPY --from=builder /root/phala-node .
 ADD dockerfile.d/start_validator.sh ./start_validator.sh
 
+ENV RUST_LOG="info"
 ENV NODE_NAME='phala-validator'
 ENV EXTRA_OPTS='--ws-external --rpc-external --unsafe-ws-external --unsafe-rpc-external --rpc-cors all'
 

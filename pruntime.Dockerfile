@@ -89,8 +89,10 @@ COPY --from=builder /root/app .
 COPY --from=builder /root/Rocket.toml .
 ADD dockerfile.d/start_pruntime.sh ./start_pruntime.sh
 
+ENV RUST_LOG="info"
 ENV SGX_MODE="$SGX_MODE"
 ENV SLEEP_BEFORE_START=6
+ENV EXTRA_OPTS=''
 
 EXPOSE 8000
 
