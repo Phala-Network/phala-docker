@@ -13,7 +13,9 @@ This repo contains dockerfiles for deployment
 
 #### Run
 
-`docker run -dti --rm --name phala-node -e NODE_NAME=my-phala-node -p 9615:9615 -p 9933:9933 -p 9944:9944 -p 30333:30333 -v $(pwd)/data:/root/data phala-node:TAG_NAME`
+`docker run -dti --rm --name phala-node -e NODE_NAME=my-phala-node -p 9615:9615 -p 9933:9933 -p 9944:9944 -p 30333:30333 -v $(pwd)/data:/root/data -e NODE_ROLE="FULL" phala-node:TAG_NAME`
+
+`NODE_ROLE` can be `FULL`, `LIGHT`, `VALIDATOR` (case sensitive)
 
 ### PRuntime
 

@@ -15,7 +15,7 @@ case ${NODE_ROLE} in
     ;;
   *)
     echo "Unknown NODE_ROLE ${NODE_ROLE}"
-    echo "accept values: LIGHT | FULL | VALIDATOR"
+    echo "accept values (case sensitive): LIGHT | FULL | VALIDATOR"
     exit 1
     ;;
 esac
