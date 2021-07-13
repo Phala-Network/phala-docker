@@ -38,6 +38,7 @@ COPY --from=builder /root/phala-node .
 ADD dockerfile.d/start_node.sh ./start_node.sh
 
 ENV RUST_LOG="info"
+ENV CHAIN="phala"
 ENV NODE_NAME='phala-node'
 ENV NODE_ROLE="FULL"
 ENV EXTRA_OPTS=''

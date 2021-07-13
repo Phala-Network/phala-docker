@@ -1,10 +1,11 @@
 #!/bin/bash
 
+CHAIN="phala"
 NODE_NAME="${NODE_NAME:-"phala-node"}"
-NODE_ROLE="${NODE_ROLE:-"FULL"}"
+NODE_ROLE="${NODE_ROLE:-""}"
 
 case ${NODE_ROLE} in
-  "LIGHT")
+  "")
     NODE_ROLE_ARGS=""
     ;;
   "FULL")
@@ -15,7 +16,7 @@ case ${NODE_ROLE} in
     ;;
   *)
     echo "Unknown NODE_ROLE ${NODE_ROLE}"
-    echo "accept values (case sensitive): LIGHT | FULL | VALIDATOR"
+    echo "accept values (case sensitive): <Empty> | FULL | VALIDATOR"
     exit 1
     ;;
 esac
@@ -23,9 +24,9 @@ esac
 echo "Starting PhalaNode as role '${NODE_ROLE}' with extra opts '${EXTRA_OPTS}'"
 
 ./phala-node \
-  --chain "phala" \
-  --base-path "$HOME/data" \
-  --name $NODE_NAME \
+  --chain "${CHAIN}" \
+  --base-path "${HOME}/data" \
+  --name "${NODE_NAME}" \
   --rpc-port 9933 \
   --ws-port 9944 \
   --ws-external \
