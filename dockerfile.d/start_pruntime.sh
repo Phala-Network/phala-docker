@@ -26,11 +26,10 @@ else
   if [ ! "$SLEEP_BEFORE_START" == "0" ]
   then
     echo "Waiting for device. Sleep ${SLEEP_BEFORE_START}s"
-    echo "Sleep ${SLEEP_BEFORE_START}s"
 
     sleep "$SLEEP_BEFORE_START"
   fi
 fi
 
 mkdir -p "$STATE_FILE_PATH"
-STATE_FILE_PATH="$STATE_FILE_PATH" ./app $EXTRA_OPTS
+STATE_FILE_PATH="$STATE_FILE_PATH" ./app "$EXTRA_OPTS"
