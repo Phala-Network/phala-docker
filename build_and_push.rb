@@ -5,15 +5,15 @@ BUILD_ONLY = false
 GIT_TAG = "master"
 
 COMMON_CHAIN_NAME = "dev"
-COMMON_TAG = "21070901"
+COMMON_TAG = "21072101"
 
 NODE_DOCKER_REPO = "phala-#{COMMON_CHAIN_NAME}-node"
 NODE_DOCKER_TAG = COMMON_TAG
 NODE_GIT_TAG = GIT_TAG
 
-PHOST_DOCKER_REPO = "phala-#{COMMON_CHAIN_NAME}-phost"
-PHOST_DOCKER_TAG = COMMON_TAG
-PHOST_GIT_TAG = GIT_TAG
+PHERRY_DOCKER_REPO = "phala-#{COMMON_CHAIN_NAME}-pherry"
+PHERRY_DOCKER_TAG = COMMON_TAG
+PHERRY_GIT_TAG = GIT_TAG
 
 PRUNTIME_DOCKER_REPO = "phala-#{COMMON_CHAIN_NAME}-pruntime"
 PRUNTIME_DOCKER_TAG = COMMON_TAG
@@ -26,8 +26,8 @@ SGX_DETECT_DOCKER_REPO = "phala-sgx_detect"
 
 REGISTRIES = [
   "jasl123",
-  "phalanetwork",
-  "swr.cn-east-3.myhuaweicloud.com/phala",
+  # "phalanetwork",
+  # "swr.cn-east-3.myhuaweicloud.com/phala",
   "docker.pkg.github.com/phala-network/phala-docker"
 ]
 
@@ -46,7 +46,7 @@ def run(cmd)
   end
 end
 
-# # Build SGX_Detect
+# Build SGX-Detect
 # REGISTRIES.each do |registry|
 #   [
 #     "docker build -f sgx_detect.Dockerfile -t #{registry}/#{SGX_DETECT_DOCKER_REPO} ."
@@ -57,7 +57,7 @@ end
 # end
 
 # unless BUILD_ONLY
-#   # Push SGX_Detect
+#   # Push SGX-Detect
 #   REGISTRIES.each do |registry|
 #     [
 #       "docker push #{registry}/#{SGX_DETECT_DOCKER_REPO}"
@@ -141,11 +141,11 @@ unless BUILD_ONLY
   end
 end
 
-# Build Phala-pHost
+# Build Phala-Pherry
 REGISTRIES.each do |registry|
   [
-    "docker build --build-arg PHALA_GIT_TAG=#{PHOST_GIT_TAG} -f phost.Dockerfile -t #{registry}/#{PHOST_DOCKER_REPO}:#{PHOST_DOCKER_TAG} .",
-    "docker build --build-arg PHALA_GIT_TAG=#{PHOST_GIT_TAG} -f phost.Dockerfile -t #{registry}/#{PHOST_DOCKER_REPO} ."
+    "docker build --build-arg PHALA_GIT_TAG=#{PHERRY_GIT_TAG} -f pherry.Dockerfile -t #{registry}/#{PHERRY_DOCKER_REPO}:#{PHERRY_DOCKER_TAG} .",
+    "docker build --build-arg PHALA_GIT_TAG=#{PHERRY_GIT_TAG} -f pherry.Dockerfile -t #{registry}/#{PHERRY_DOCKER_REPO} ."
   ].each do |cmd|
     puts cmd
     run cmd
@@ -153,11 +153,11 @@ REGISTRIES.each do |registry|
 end
 
 unless BUILD_ONLY
-  # Push Phala-pHost
+  # Push Phala-Pherry
   REGISTRIES.each do |registry|
     [
-      "docker push #{registry}/#{PHOST_DOCKER_REPO}:#{PHOST_DOCKER_TAG}",
-      "docker push #{registry}/#{PHOST_DOCKER_REPO}"
+      "docker push #{registry}/#{PHERRY_DOCKER_REPO}:#{PHERRY_DOCKER_TAG}",
+      "docker push #{registry}/#{PHERRY_DOCKER_REPO}"
     ].each do |cmd|
       puts cmd
       run cmd

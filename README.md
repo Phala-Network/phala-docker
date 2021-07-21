@@ -41,25 +41,25 @@ Hardware mode
 
 `docker run -dti --rm --name phala-pruntime -p 8000:8000 -v $(pwd)/data:/root/data --device /dev/sgx/enclave --device /dev/sgx/provision phala-pruntime:TAG_NAME`
 
-### PHost
+### Pherry
 
 #### Build
 
-`docker build --build-arg PHALA_GIT_TAG=master -f phost.Dockerfile -t phala-phost:TAG_NAME .`
+`docker build --build-arg PHALA_GIT_TAG=master -f pherry.Dockerfile -t phala-pherry:TAG_NAME .`
 
 #### Run
 
-`docker run -dti --rm --name phala-phost -e PRUNTIME_ENDPOINT="http://YOUR_IP:8000" -e PHALA_NODE_WS_ENDPOINT="ws://YOUR_IP:9944" -e MNEMONIC="YOUR_MNEMONIC" -e EXTRA_OPTS="-r" phala-phost:TAG_NAME`
+`docker run -dti --rm --name phala-pherry -e PRUNTIME_ENDPOINT="http://YOUR_IP:8000" -e PHALA_NODE_WS_ENDPOINT="ws://YOUR_IP:9944" -e MNEMONIC="YOUR_MNEMONIC" -e EXTRA_OPTS="-r" phala-pherry:TAG_NAME`
 
 If PhalNode and PRuntime runs in the same PC, you can use `--link` to connect them
 
-`docker run -dti --rm --name phala-phost -e PRUNTIME_ENDPOINT="http://phala-pruntime:8000" -e PHALA_NODE_WS_ENDPOINT="ws://phala-node:9944" -e MNEMONIC="YOUR_MNEMONIC" -e EXTRA_OPTS="-r" --link phala-node --link phala-pruntime phala-phost:TAG_NAME`
+`docker run -dti --rm --name phala-pherry -e PRUNTIME_ENDPOINT="http://phala-pruntime:8000" -e PHALA_NODE_WS_ENDPOINT="ws://phala-node:9944" -e MNEMONIC="YOUR_MNEMONIC" -e EXTRA_OPTS="-r" --link phala-node --link phala-pruntime phala-pherry:TAG_NAME`
 
 Note:
 
-Remember start PHost after PhalaNode and Phost started to accept connections.
+Remember start Pherry after PhalaNode and Pherry started to accept connections.
 
-If you're using Docker Compose or some sort of, you would adding `-e SLEEP_BEFORE_START=10` to ensure PRuntime started before starting PHost
+If you're using Docker Compose or some sort of, you would adding `-e SLEEP_BEFORE_START=10` to ensure PRuntime started before starting Pherry
 
 About `EXTRA_OPTS`:
 

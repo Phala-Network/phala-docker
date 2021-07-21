@@ -18,7 +18,7 @@ RUN echo "Compiling Phala Blockchain from $PHALA_GIT_REPO:$PHALA_GIT_TAG..." && 
     cd phala-blockchain && \
     PATH="$HOME/.cargo/bin:$PATH" cargo build --release && \
     cp ./target/release/phala-node /root && \
-    cp ./target/release/phost /root && \
+    cp ./target/release/pherry /root && \
     PATH="$HOME/.cargo/bin:$PATH" cargo clean && \
     rm -rf /root/.cargo/registry && \
     rm -rf /root/.cargo/git
@@ -34,8 +34,8 @@ WORKDIR /root
 RUN apt-get update && \
     apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates tini
 
-COPY --from=builder /root/phost .
-ADD dockerfile.d/start_phost.sh ./start_phost.sh
+COPY --from=builder /root/pherry .
+ADD dockerfile.d/start_pherry.sh ./start_pherry.sh
 
 ENV RUST_LOG="info"
 ENV PRUNTIME_ENDPOINT='http://127.0.0.1:8000'
@@ -46,4 +46,4 @@ ENV SLEEP_BEFORE_START=0
 
 ENTRYPOINT ["/usr/bin/tini", "--"]
 
-CMD ["/bin/bash", "./start_phost.sh"]
+CMD ["/bin/bash", "./start_pherry.sh"]

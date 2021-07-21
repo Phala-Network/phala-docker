@@ -18,7 +18,7 @@ RUN echo "Compiling Phala Blockchain from $PHALA_GIT_REPO:$PHALA_GIT_TAG..." && 
     cd phala-blockchain && \
     PATH="$HOME/.cargo/bin:$PATH" cargo build --release && \
     cp ./target/release/phala-node /root && \
-    cp ./target/release/phost /root && \
+    cp ./target/release/pherry /root && \
     PATH="$HOME/.cargo/bin:$PATH" cargo clean && \
     rm -rf /root/.cargo/registry && \
     rm -rf /root/.cargo/git

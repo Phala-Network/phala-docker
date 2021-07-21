@@ -8,9 +8,9 @@ then
   sleep "$SLEEP_BEFORE_START"
 fi
 
-echo "Starting pHost with extra opts '${EXTRA_OPTS}'"
+echo "Starting Pherry with extra opts '${EXTRA_OPTS}'"
 
-./phost \
+./pherry \
   --pruntime-endpoint "$PRUNTIME_ENDPOINT" \
   --substrate-ws-endpoint "$PHALA_NODE_WS_ENDPOINT" \
   --mnemonic "$MNEMONIC" \
