@@ -1,7 +1,7 @@
 FROM ubuntu:20.04 AS builder
 
 ARG DEBIAN_FRONTEND='noninteractive'
-ARG RUST_TOOLCHAIN='nightly-2021-09-01'
+ARG RUST_TOOLCHAIN='nightly-2021-11-11'
 ARG PHALA_GIT_REPO='https://github.com/Phala-Network/phala-blockchain.git'
 ARG PHALA_GIT_TAG='master'
 
@@ -16,7 +16,7 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --de
 RUN echo "Compiling Phala Blockchain from $PHALA_GIT_REPO:$PHALA_GIT_TAG..." && \
     git clone --depth 1 --recurse-submodules --shallow-submodules -j 8 -b ${PHALA_GIT_TAG} ${PHALA_GIT_REPO} phala-blockchain && \
     cd phala-blockchain && \
-    PATH="$HOME/.cargo/bin:$PATH" cargo build --release && \
+    PATH="$HOME/.cargo/bin:$PATH" cargo build --profile production && \
     cp ./target/release/phala-node /root && \
     cp ./target/release/pherry /root && \
     PATH="$HOME/.cargo/bin:$PATH" cargo clean && \
