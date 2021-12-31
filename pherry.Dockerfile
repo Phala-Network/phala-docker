@@ -17,8 +17,8 @@ RUN echo "Compiling Phala Blockchain from $PHALA_GIT_REPO:$PHALA_GIT_TAG..." && 
     git clone --depth 1 --recurse-submodules --shallow-submodules -j 8 -b ${PHALA_GIT_TAG} ${PHALA_GIT_REPO} phala-blockchain && \
     cd phala-blockchain && \
     PATH="$HOME/.cargo/bin:$PATH" cargo build --profile production && \
-    cp ./target/release/phala-node /root && \
-    cp ./target/release/pherry /root && \
+    cp ./target/production/phala-node /root && \
+    cp ./target/production/pherry /root && \
     PATH="$HOME/.cargo/bin:$PATH" cargo clean && \
     rm -rf /root/.cargo/registry && \
     rm -rf /root/.cargo/git
