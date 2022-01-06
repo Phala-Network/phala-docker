@@ -12,6 +12,7 @@ echo "Starting Pherry with extra opts '${EXTRA_OPTS}'"
 
 ./pherry \
   --auto-restart \
+  --max-restart-retries 100 \
   --pruntime-endpoint "$PRUNTIME_ENDPOINT" \
   --substrate-ws-endpoint "$PHALA_NODE_WS_ENDPOINT" \
   --mnemonic "$MNEMONIC" \
