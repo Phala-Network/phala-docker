@@ -19,14 +19,18 @@ HEADERS_CACHE_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-headers-cache"
 HEADERS_CACHE_DOCKER_TAG = COMMON_TAG
 HEADERS_CACHE_GIT_TAG = GIT_TAG
 
-PRUNTIME_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-pruntime"
-PRUNTIME_DOCKER_TAG = COMMON_TAG
+REPLAY_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-replay"
+REPLAY_DOCKER_TAG = COMMON_TAG
+REPLAY_GIT_TAG = GIT_TAG
+
+PREBUILT_PRUNTIME_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-pruntime"
+PREBUILT_PRUNTIME_DOCKER_TAG = COMMON_TAG
 
 SGX_DETECT_DOCKER_REPO = "phala-sgx_detect"
 
 REGISTRIES = [
   "jasl123",
-  # "phalanetwork",
+  "phalanetwork",
   # "swr.cn-east-3.myhuaweicloud.com/phala",
   # "docker.pkg.github.com/phala-network/phala-docker"
 ]
@@ -46,7 +50,7 @@ def run(cmd)
   end
 end
 
-# Build SGX-Detect
+# # Build SGX-Detect
 # REGISTRIES.each do |registry|
 #   [
 #     "docker build -f sgx_detect.Dockerfile -t #{registry}/#{SGX_DETECT_DOCKER_REPO} ."
@@ -157,6 +161,29 @@ unless BUILD_ONLY
     [
       "docker push #{registry}/#{HEADERS_CACHE_DOCKER_REPO}:#{HEADERS_CACHE_DOCKER_TAG}",
       "docker push #{registry}/#{HEADERS_CACHE_DOCKER_REPO}"
+    ].each do |cmd|
+      puts cmd
+      run cmd
+    end
+end
+
+# Build Phala-GK-Replay
+REGISTRIES.each do |registry|
+  [
+    "docker build --build-arg PHALA_GIT_TAG=#{REPLAY_GIT_TAG} -f replay.Dockerfile -t #{registry}/#{REPLAY_DOCKER_REPO}:#{REPLAY_DOCKER_TAG} .",
+    "docker build --build-arg PHALA_GIT_TAG=#{REPLAY_GIT_TAG} -f replay.Dockerfile -t #{registry}/#{REPLAY_DOCKER_REPO} ."
+  ].each do |cmd|
+    puts cmd
+    run cmd
+  end
+end
+
+unless BUILD_ONLY
+  # Push Phala-GK-Replay
+  REGISTRIES.each do |registry|
+    [
+      "docker push #{registry}/#{REPLAY_DOCKER_REPO}:#{REPLAY_DOCKER_TAG}",
+      "docker push #{registry}/#{REPLAY_DOCKER_REPO}"
     ].each do |cmd|
       puts cmd
       run cmd

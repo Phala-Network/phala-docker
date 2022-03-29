@@ -31,5 +31,12 @@ else
   fi
 fi
 
-mkdir -p "$STATE_FILE_PATH"
-STATE_FILE_PATH="$STATE_FILE_PATH" ./app --skip-corrupted-checkpoint $EXTRA_OPTS
+# mkdir -p "$STATE_FILE_PATH"
+# STATE_FILE_PATH="$STATE_FILE_PATH" ./app --skip-corrupted-checkpoint $EXTRA_OPTS
+
+if [ "$SGX_MODE" == "SW" ]
+then
+  cd /opt/pruntime && ./pruntime -c 0 --allow-cors
+else
+  cd /opt/pruntime && gramine-sgx ./pruntime -c 0 --allow-cors
+fi

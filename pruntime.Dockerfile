@@ -16,9 +16,16 @@ ARG SGX_ENCLAVE_CONFIG_URL=''
 WORKDIR /root
 
 RUN apt-get update && \
-    apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates unzip lsb-release debhelper gettext cmake reprepro autoconf automake bison build-essential curl dpkg-dev expect flex gcc gdb git git-core gnupg kmod libboost-system-dev libboost-thread-dev libcurl4-openssl-dev libiptcdata0-dev libjsoncpp-dev liblog4cpp5-dev libprotobuf-dev libssl-dev libtool libxml2-dev uuid-dev ocaml ocamlbuild pkg-config protobuf-compiler python texinfo llvm clang libclang-dev
+    apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates unzip lsb-release debhelper gettext cmake reprepro autoconf automake bison build-essential curl dpkg-dev expect flex gcc gdb git git-core gnupg kmod libboost-system-dev libboost-thread-dev libcurl4-openssl-dev libiptcdata0-dev libjsoncpp-dev liblog4cpp5-dev libprotobuf-dev libssl-dev libtool libxml2-dev uuid-dev ocaml ocamlbuild pkg-config protobuf-compiler python python3-pip texinfo llvm clang libclang-dev
+
+RUN curl -fsSLo /usr/share/keyrings/gramine-keyring.gpg https://packages.gramineproject.io/gramine-keyring.gpg
+RUN echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/gramine-keyring.gpg] https://packages.gramineproject.io/ stable main' | tee /etc/apt/sources.list.d/gramine.list
+RUN apt-get update && \
+    apt-get install -y gramine
 
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain="${RUST_TOOLCHAIN}"
+
+RUN pip install meson ninja
 
 RUN echo "Compiling Phala Blockchain from $PHALA_GIT_REPO:$PHALA_GIT_TAG..." && \
     cd /root && \
@@ -29,11 +36,8 @@ RUN echo "Compiling Phala Blockchain from $PHALA_GIT_REPO:$PHALA_GIT_TAG..." && 
     rm -rf ./sgx_linux_sdk.bin
 
 RUN git clone --depth 1 --recurse-submodules --shallow-submodules -j 8 -b ${PHALA_GIT_TAG} ${PHALA_GIT_REPO} phala-blockchain && \
-    cd phala-blockchain/standalone/pruntime && \
-    PATH="$PATH:$HOME/.cargo/bin" SGX_SDK="/opt/intel/sgxsdk" SGX_MODE="$SGX_MODE" make && \
-    cp ./bin/app /root/ && \
-    cp ./bin/enclave.signed.so /root/ && \
-    cp ./bin/Rocket.toml /root/ && \
+    cd phala-blockchain/standalone/pruntime/pruntime/gramine-build && \
+    PATH="$PATH:$HOME/.cargo/bin" make dist PREFIX=/root/pruntime && \
     PATH="$PATH:$HOME/.cargo/bin" make clean && \
     rm -rf /root/.cargo/registry && \
     rm -rf /root/.cargo/git
@@ -49,7 +53,7 @@ WORKDIR /root
 RUN apt-get update && \
     apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates tini
 
-ARG SGX_MODE="SW"
+RUN apt-get install libprotobuf-c1
 
 RUN curl -fsSL https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.key | apt-key add - && \
     add-apt-repository "deb https://download.01.org/intel-sgx/sgx_repo/ubuntu focal main" && \
@@ -81,11 +85,16 @@ RUN curl -fsSL https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.k
         libsgx-ra-uefi && \
     apt-get clean -y
 
+RUN curl -fsSLo /usr/share/keyrings/gramine-keyring.gpg https://packages.gramineproject.io/gramine-keyring.gpg
+RUN echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/gramine-keyring.gpg] https://packages.gramineproject.io/ stable main' | tee /etc/apt/sources.list.d/gramine.list
+RUN apt-get update && \
+    apt-get install -y gramine
+
 COPY --from=builder /opt/intel /opt/intel
-COPY --from=builder /root/enclave.signed.so .
-COPY --from=builder /root/app .
-COPY --from=builder /root/Rocket.toml .
-ADD dockerfile.d/start_pruntime.sh ./start_pruntime.sh
+COPY --from=builder /root/pruntime /opt/pruntime
+ADD dockerfile.d/start_pruntime.sh /opt/pruntime/start_pruntime.sh
+
+ARG SGX_MODE="SW"
 
 ENV RUST_LOG="info"
 ENV SGX_MODE="$SGX_MODE"
@@ -96,4 +105,4 @@ EXPOSE 8000
 
 ENTRYPOINT ["/usr/bin/tini", "--"]
 
-CMD ["/bin/bash", "./start_pruntime.sh"]
+CMD ["/bin/bash", "/opt/pruntime/start_pruntime.sh"]

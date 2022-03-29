@@ -60,7 +60,7 @@ ADD prebuilt/ra-test/enclave.signed.so .
 ADD dockerfile.d/start_sgx_detect.sh ./start_sgx_detect.sh
 
 ENV RUST_LOG="info"
-ENV SLEEP_BEFORE_START=6
+ENV SLEEP_BEFORE_START=12
 
 ENTRYPOINT ["/usr/bin/tini", "--"]
 
