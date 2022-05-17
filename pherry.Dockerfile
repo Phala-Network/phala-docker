@@ -1,9 +1,10 @@
 FROM ubuntu:20.04 AS builder
 
 ARG DEBIAN_FRONTEND='noninteractive'
-ARG RUST_TOOLCHAIN='nightly-2021-11-11'
+ARG RUST_TOOLCHAIN='nightly-2022-04-01'
 ARG PHALA_GIT_REPO='https://github.com/Phala-Network/phala-blockchain.git'
 ARG PHALA_GIT_TAG='master'
+ARG PHALA_CARGO_PROFILE='release'
 
 WORKDIR /root
 
@@ -16,9 +17,10 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --de
 RUN echo "Compiling Phala Blockchain from $PHALA_GIT_REPO:$PHALA_GIT_TAG..." && \
     git clone --depth 1 --recurse-submodules --shallow-submodules -j 8 -b ${PHALA_GIT_TAG} ${PHALA_GIT_REPO} phala-blockchain && \
     cd phala-blockchain && \
-    PATH="$HOME/.cargo/bin:$PATH" cargo build --profile production && \
-    cp ./target/production/phala-node /root && \
-    cp ./target/production/pherry /root && \
+    PATH="$HOME/.cargo/bin:$PATH" cargo build --profile $PHALA_CARGO_PROFILE && \
+    cp ./target/$PHALA_CARGO_PROFILE/phala-node /root && \
+    cp ./target/$PHALA_CARGO_PROFILE/pherry /root && \
+    cp ./target/$PHALA_CARGO_PROFILE/headers-cache /root && \
     PATH="$HOME/.cargo/bin:$PATH" cargo clean && \
     rm -rf /root/.cargo/registry && \
     rm -rf /root/.cargo/git

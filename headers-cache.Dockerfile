@@ -36,20 +36,14 @@ WORKDIR /root
 RUN apt-get update && \
     apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates tini
 
-COPY --from=builder /root/phala-node .
-ADD dockerfile.d/start_node.sh ./start_node.sh
+COPY --from=builder /root/headers-cache .
+ADD dockerfile.d/start_pherry.sh ./start_pherry.sh
 
 ENV RUST_LOG="info"
-ENV CHAIN="phala"
-ENV NODE_NAME='phala-node'
-ENV NODE_ROLE="FULL"
-ENV EXTRA_OPTS=''
+ENV PRUNTIME_ENDPOINT='http://127.0.0.1:8000'
+ENV PHALA_NODE_WS_ENDPOINT='ws://127.0.0.1:9944'
+ENV MNEMONIC=''
+ENV EXTRA_OPTS='-r'
+ENV SLEEP_BEFORE_START=0
 
-EXPOSE 9615
-EXPOSE 9933
-EXPOSE 9944
-EXPOSE 30333
-
-ENTRYPOINT ["/usr/bin/tini", "--"]
-
-CMD ["/bin/bash", "./start_node.sh"]
+ENTRYPOINT ["/root/headers-cache"]
