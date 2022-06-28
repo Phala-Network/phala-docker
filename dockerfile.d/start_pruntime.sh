@@ -7,8 +7,6 @@ STATE_FILE_PATH=${STATE_FILE_PATH:-"data"}
 if [ "$SGX_MODE" == "SW" ]
 then
   echo "PRuntime will running in software mode"
-
-  source /opt/intel/sgxsdk/environment
 else
   echo "PRuntime will running in hardware mode"
   
@@ -18,7 +16,7 @@ else
   /bin/chown -R aesmd:aesmd /var/opt/aesmd/
   /bin/chmod 0750 /var/opt/aesmd/
 
-  LD_LIBRARY_PATH=/opt/intel/sgx-aesm-service/aesm /opt/intel/sgx-aesm-service/aesm/aesm_service &
+  LD_LIBRARY_PATH=/opt/intel/sgx-aesm-service/aesm /opt/intel/sgx-aesm-service/aesm/aesm_service
   
   echo "pRuntime starting... It may take up to 2 minutes."
 
@@ -36,7 +34,7 @@ fi
 
 if [ "$SGX_MODE" == "SW" ]
 then
-  cd /opt/pruntime && ./pruntime -c 0 --allow-cors
+  cd /opt/pruntime && ./pruntime --allow-cors $EXTRA_OPTS
 else
-  cd /opt/pruntime && gramine-sgx ./pruntime -c 0 --allow-cors
+  cd /opt/pruntime && gramine-sgx ./pruntime --allow-cors $EXTRA_OPTS
 fi
