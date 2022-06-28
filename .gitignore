@@ -3,3 +3,6 @@
 
 /prebuilt/**/*
 !/prebuilt/.keep
+
+/priv.build_stage/**/*
+!/priv.build_stage/.keep
