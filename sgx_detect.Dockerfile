@@ -10,7 +10,8 @@ RUN apt-get update && \
 
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain="${RUST_TOOLCHAIN}" && \
     $HOME/.cargo/bin/rustup target add x86_64-fortanix-unknown-sgx --toolchain "${RUST_TOOLCHAIN}" && \
-    $HOME/.cargo/bin/cargo install fortanix-sgx-tools sgxs-tools
+    $HOME/.cargo/bin/cargo install fortanix-sgx-tools sgxs-tools && \
+    echo >> $HOME/.cargo/config -e '[target.x86_64-fortanix-unknown-sgx]\nrunner = "ftxsgx-runner-cargo"'
 
 # ====
 
