@@ -19,15 +19,10 @@ HEADERS_CACHE_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-headers-cache"
 HEADERS_CACHE_DOCKER_TAG = COMMON_TAG
 HEADERS_CACHE_GIT_TAG = GIT_TAG
 
-
 PRUNTIME_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-pruntime"
 PRUNTIME_DOCKER_TAG = COMMON_TAG
 
-PRUNTIME_BENCH_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-pruntime-bench"
-PRUNTIME_BENCH_DOCKER_TAG = COMMON_TAG
-
 SGX_DETECT_DOCKER_REPO = "phala-sgx_detect"
-
 
 REGISTRIES = [
   "jasl123",
@@ -90,31 +85,6 @@ end
 #     [
 #       "docker push #{registry}/#{PRUNTIME_DOCKER_REPO}:#{PRUNTIME_DOCKER_TAG}",
 #       "docker push #{registry}/#{PRUNTIME_DOCKER_REPO}"
-#     ].each do |cmd|
-#       puts cmd
-#       run cmd
-#     end
-#   end
-# end
-
-# # Build Phala-pRuntime-bench
-# # Phala-pRuntime-bench shares the same Dockerfile with Phala-pRuntime
-# REGISTRIES.each do |registry|
-#   [
-#     "docker build -f prebuilt_pruntime.Dockerfile -t #{registry}/#{PRUNTIME_BENCH_DOCKER_REPO}:#{PRUNTIME_BENCH_DOCKER_TAG} .",
-#     "docker build -f prebuilt_pruntime.Dockerfile -t #{registry}/#{PRUNTIME_BENCH_DOCKER_REPO} ."
-#   ].each do |cmd|
-#     puts cmd
-#     run cmd
-#   end
-# end
-
-# unless BUILD_ONLY
-#   # Push Phala-pRuntime-bench
-#   REGISTRIES.each do |registry|
-#     [
-#       "docker push #{registry}/#{PRUNTIME_BENCH_DOCKER_REPO}:#{PRUNTIME_BENCH_DOCKER_TAG}",
-#       "docker push #{registry}/#{PRUNTIME_BENCH_DOCKER_REPO}"
 #     ].each do |cmd|
 #       puts cmd
 #       run cmd
