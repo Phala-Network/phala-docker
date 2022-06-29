@@ -30,13 +30,13 @@ RUN apt-get update && \
         libsgx-quote-ex-dev \
         libsgx-uae-service \
         libsgx-urts \
-        sgx-aesm-service \
         libsgx-ae-qe3 \
         libsgx-pce-logic \
         libsgx-qe3-logic \
         libsgx-ra-network \
         libsgx-ra-uefi \
         libsgx-dcap-default-qpl \
+        sgx-aesm-service \
         gramine && \
     apt-get clean -y
 
@@ -55,6 +55,7 @@ ARG PHALA_GIT_TAG='master'
 
 RUN git clone --depth 1 --recurse-submodules --shallow-submodules -j 8 -b ${PHALA_GIT_TAG} ${PHALA_GIT_REPO} phala-blockchain
 
+ARG RA_METHOD="epid"
 ARG IAS_SPID=""
 ARG IAS_API_KEY=""
 ARG IAS_ENV="DEV"
@@ -66,7 +67,8 @@ COPY priv.build_stage .priv
 RUN cd phala-blockchain/standalone/pruntime/gramine-build && \
     PATH="$PATH:$HOME/.cargo/bin" make dist PREFIX=/opt/pruntime && \
     PATH="$PATH:$HOME/.cargo/bin" make clean && \
-    rm -rf $HOME/.priv/*
+    rm -rf $HOME/.priv/* && \
+    rm -f /opt/pruntime/pruntime.token
 
 # ====
 
@@ -102,13 +104,13 @@ RUN apt-get update && \
         libsgx-quote-ex-dev \
         libsgx-uae-service \
         libsgx-urts \
-        sgx-aesm-service \
         libsgx-ae-qe3 \
         libsgx-pce-logic \
         libsgx-qe3-logic \
         libsgx-ra-network \
         libsgx-ra-uefi \
         libsgx-dcap-default-qpl \
+        sgx-aesm-service \
         gramine && \
     apt-get clean -y
 
@@ -120,7 +122,7 @@ ADD dockerfile.d/start_pruntime.sh /opt/pruntime/start_pruntime.sh
 WORKDIR /opt/pruntime
 
 ENV RUST_LOG="info"
-ENV SGX_MODE="HW"
+ENV SGX=1
 ENV SLEEP_BEFORE_START=6
 ENV EXTRA_OPTS=""
 

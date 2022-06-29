@@ -30,17 +30,18 @@ RUN apt-get update && \
         libsgx-quote-ex-dev \
         libsgx-uae-service \
         libsgx-urts \
-        sgx-aesm-service \
         libsgx-ae-qe3 \
         libsgx-pce-logic \
         libsgx-qe3-logic \
         libsgx-ra-network \
         libsgx-ra-uefi \
         libsgx-dcap-default-qpl \
+        sgx-aesm-service \
         gramine && \
     apt-get clean -y
 
 COPY prebuilt/pruntime /opt/pruntime
+RUN rm -f /opt/pruntime/pruntime.token
 ADD dockerfile.d/start_pruntime.sh /opt/pruntime/start_pruntime.sh
 
 # STOPSIGNAL SIGQUIT
@@ -48,7 +49,7 @@ ADD dockerfile.d/start_pruntime.sh /opt/pruntime/start_pruntime.sh
 WORKDIR /opt/pruntime
 
 ENV RUST_LOG="info"
-ENV SGX_MODE="HW"
+ENV SGX=1
 ENV SLEEP_BEFORE_START=6
 ENV EXTRA_OPTS=""
 
