@@ -2,9 +2,6 @@
 
 set -e
 
-GRAMINE_SGX_BIN=${GRAMINE_BIN:-"/usr/bin/gramine-sgx"}
-GRAMINE_SGX_GET_TOKEN_BIN=${GRAMINE_SGX_GET_TOKEN_BIN:-"/usr/bin/gramine-sgx-get-token"}
-
 if [ "$SGX" -eq 1 ]; then
   echo "Starting AESMD"
 
@@ -24,6 +21,9 @@ if [ "$SGX" -eq 1 ]; then
   fi
 fi
 
+GRAMINE_SGX_BIN=${GRAMINE_BIN:-"/usr/bin/gramine-sgx"}
+GRAMINE_SGX_GET_TOKEN_BIN=${GRAMINE_SGX_GET_TOKEN_BIN:-"/usr/bin/gramine-sgx-get-token"}
+
 WORK_DIR=$(dirname $(readlink -f "$0"))
 DATA_DIR=${DATA_DIR:-"${WORK_DIR}/data"}
 
@@ -34,11 +34,9 @@ mkdir -p "${DATA_DIR}/protected_files"
 mkdir -p "${DATA_DIR}/storage_files"
 
 echo "Starting PRuntime with extra opts '${EXTRA_OPTS}'"
-
 if [ "$SGX" -eq 0 ]; then
   echo "PRuntime will running in software mode"
-
-  cd $WORK_DIR && $WORK_DIR/pruntime --allow-cors $EXTRA_OPTS
+  cd $WORK_DIR && pruntime --allow-cors $EXTRA_OPTS
 else
   if [[ ! -f "$WORK_DIR/pruntime.token" ]]; then
     echo "Generating token"
@@ -46,6 +44,5 @@ else
   fi
 
   echo "PRuntime will running in hardware mode"
-
-  cd $WORK_DIR && $GRAMINE_SGX_BIN $WORK_DIR/pruntime --allow-cors $EXTRA_OPTS
+  cd $WORK_DIR && $GRAMINE_SGX_BIN pruntime --allow-cors $EXTRA_OPTS
 fi
