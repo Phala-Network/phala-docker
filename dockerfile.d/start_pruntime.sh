@@ -2,7 +2,7 @@
 
 set -e
 
-if [ "$SGX" -eq 1 ]; then
+if [ "$SGX" -eq 1 ] && [ "$SKIP_AESMD" -eq 0 ]; then
   echo "Starting AESMD"
 
   /bin/mkdir -p /var/run/aesmd/

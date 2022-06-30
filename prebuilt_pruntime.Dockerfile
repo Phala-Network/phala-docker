@@ -48,9 +48,10 @@ ADD dockerfile.d/start_pruntime.sh /opt/pruntime/start_pruntime.sh
 
 WORKDIR /opt/pruntime
 
-ENV RUST_LOG="info"
 ENV SGX=1
+ENV SKIP_AESMD=0
 ENV SLEEP_BEFORE_START=6
+ENV RUST_LOG="info"
 ENV EXTRA_OPTS=""
 
 EXPOSE 8000
