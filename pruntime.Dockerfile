@@ -65,7 +65,7 @@ ARG PRUNTIME_DATA_DIR="/opt/pruntime/data"
 COPY priv.build_stage .priv
 
 RUN cd phala-blockchain/standalone/pruntime/gramine-build && \
-    PATH="$PATH:$HOME/.cargo/bin" make dist PREFIX=/opt/pruntime GEN_GRAMINE_SGX_TOKEN=0 && \
+    PATH="$PATH:$HOME/.cargo/bin" make dist PREFIX=/opt/pruntime && \
     PATH="$PATH:$HOME/.cargo/bin" make clean && \
     rm -rf $HOME/.priv/*
 
