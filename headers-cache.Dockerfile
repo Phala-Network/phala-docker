@@ -1,7 +1,7 @@
 FROM ubuntu:20.04 AS builder
 
 ARG DEBIAN_FRONTEND='noninteractive'
-ARG RUST_TOOLCHAIN='nightly-2022-04-01'
+ARG RUST_TOOLCHAIN='nightly-2022-07-11'
 ARG PHALA_GIT_REPO='https://github.com/Phala-Network/phala-blockchain.git'
 ARG PHALA_GIT_TAG='master'
 ARG PHALA_CARGO_PROFILE='release'
@@ -21,6 +21,7 @@ RUN echo "Compiling Phala Blockchain from $PHALA_GIT_REPO:$PHALA_GIT_TAG..." && 
     cp ./target/$PHALA_CARGO_PROFILE/phala-node /root && \
     cp ./target/$PHALA_CARGO_PROFILE/pherry /root && \
     cp ./target/$PHALA_CARGO_PROFILE/headers-cache /root && \
+    cp ./target/$PHALA_CARGO_PROFILE/replay /root && \
     PATH="$HOME/.cargo/bin:$PATH" cargo clean && \
     rm -rf /root/.cargo/registry && \
     rm -rf /root/.cargo/git
