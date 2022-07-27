@@ -15,12 +15,9 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --de
 
 RUN git clone --depth 1 --recurse-submodules --shallow-submodules -j 8 -b ${PHALA_GIT_TAG} ${PHALA_GIT_REPO} phala-blockchain
 
-RUN cd phala-blockchain && \
+RUN cd phala-blockchain/standalone/prouter && \
     PATH="$HOME/.cargo/bin:$PATH" cargo build --profile $PHALA_CARGO_PROFILE && \
-    cp ./target/$PHALA_CARGO_PROFILE/phala-node /root && \
-    cp ./target/$PHALA_CARGO_PROFILE/pherry /root && \
-    cp ./target/$PHALA_CARGO_PROFILE/headers-cache /root && \
-    cp ./target/$PHALA_CARGO_PROFILE/replay /root && \
+    cp ./target/$PHALA_CARGO_PROFILE/prouter /root && \
     PATH="$HOME/.cargo/bin:$PATH" cargo clean && \
     rm -rf /root/.cargo/registry && \
     rm -rf /root/.cargo/git
@@ -34,15 +31,13 @@ WORKDIR /root
 RUN apt-get update && \
     DEBIAN_FRONTEND='noninteractive' apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates tini
 
-COPY --from=builder /root/replay .
-ADD dockerfile.d/start_replay.sh ./start_replay.sh
+COPY --from=builder /root/prouter .
 RUN mkdir /root/data
 
 ENV RUST_LOG="info"
-ENV EXTRA_OPTS=''
 
-EXPOSE 8080
+WORKDIR /root/data
 
 ENTRYPOINT ["/usr/bin/tini", "--"]
 
-CMD ["/bin/bash", "./start_replay.sh"]
+CMD ["/root/headers-cache"]

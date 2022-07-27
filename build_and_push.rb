@@ -5,7 +5,7 @@ BUILD_ONLY = false
 GIT_TAG = "master"
 
 COMMON_CHAIN_NAME = "phala-dev"
-COMMON_TAG = "22070101"
+COMMON_TAG = "22072801"
 
 NODE_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-node"
 NODE_DOCKER_TAG = COMMON_TAG
@@ -23,8 +23,13 @@ REPLAY_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-replay"
 REPLAY_DOCKER_TAG = COMMON_TAG
 REPLAY_GIT_TAG = GIT_TAG
 
-PREBUILT_PRUNTIME_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-pruntime"
-PREBUILT_PRUNTIME_DOCKER_TAG = COMMON_TAG
+PROUTER_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-prouter"
+PROUTER_DOCKER_TAG = COMMON_TAG
+PROUTER_GIT_TAG = GIT_TAG
+
+PRUNTIME_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-pruntime"
+PRUNTIME_DOCKER_TAG = COMMON_TAG
+PRUNTIME_GIT_TAG = GIT_TAG
 
 SGX_DETECT_DOCKER_REPO = "phala-sgx_detect"
 
@@ -72,11 +77,42 @@ end
 #   end
 # end
 
+# # Build Prebuilt Phala-pRuntime
+# REGISTRIES.each do |registry|
+#   [
+#     "docker build -f prebuilt_pruntime.Dockerfile -t #{registry}/#{PRUNTIME_DOCKER_REPO}:#{PRUNTIME_DOCKER_TAG} .",
+#     "docker build -f prebuilt_pruntime.Dockerfile -t #{registry}/#{PRUNTIME_DOCKER_REPO} ."
+#   ].each do |cmd|
+#     puts cmd
+#     run cmd
+#   end
+# end
+
+# unless BUILD_ONLY
+#   # Push Phala-pRuntime
+#   REGISTRIES.each do |registry|
+#     [
+#       "docker push #{registry}/#{PRUNTIME_DOCKER_REPO}:#{PRUNTIME_DOCKER_TAG}",
+#       "docker push #{registry}/#{PRUNTIME_DOCKER_REPO}"
+#     ].each do |cmd|
+#       puts cmd
+#       run cmd
+#     end
+#   end
+# end
+
 # Build Phala-pRuntime
+IAS_SPID = ENV.fetch("IAS_SPID")
+IAS_API_KEY = ENV.fetch("IAS_API_KEY")
+IAS_ENV = "PROD"
+RA_METHOD = "epid"
+SGX_SIGNER_KEY = "Enclave_private.prod.decrypted.pem"
+PRUNTIME_DATA_DIR = "/opt/pruntime/data"
+
 REGISTRIES.each do |registry|
   [
-    "docker build -f prebuilt_pruntime.Dockerfile -t #{registry}/#{PREBUILT_PRUNTIME_DOCKER_REPO}:#{PREBUILT_PRUNTIME_DOCKER_TAG} .",
-    "docker build -f prebuilt_pruntime.Dockerfile -t #{registry}/#{PREBUILT_PRUNTIME_DOCKER_REPO} ."
+    "docker build --build-arg PHALA_GIT_TAG=#{PRUNTIME_GIT_TAG} --build-arg SGX_SIGNER_KEY=/root/.priv/#{SGX_SIGNER_KEY} --build-arg IAS_SPID=#{IAS_SPID} --build-arg IAS_API_KEY=#{IAS_API_KEY} --build-arg IAS_ENV=#{IAS_ENV} --build-arg RA_METHOD=#{RA_METHOD} --build-arg PRUNTIME_DATA_DIR=#{PRUNTIME_DATA_DIR} -f pruntime.Dockerfile -t #{registry}/#{PRUNTIME_DOCKER_REPO}:#{PRUNTIME_DOCKER_TAG} .",
+    "docker build --build-arg PHALA_GIT_TAG=#{PRUNTIME_GIT_TAG} --build-arg SGX_SIGNER_KEY=/root/.priv/#{SGX_SIGNER_KEY} --build-arg IAS_SPID=#{IAS_SPID} --build-arg IAS_API_KEY=#{IAS_API_KEY} --build-arg IAS_ENV=#{IAS_ENV} --build-arg RA_METHOD=#{RA_METHOD} --build-arg PRUNTIME_DATA_DIR=#{PRUNTIME_DATA_DIR} -f pruntime.Dockerfile -t #{registry}/#{PRUNTIME_DOCKER_REPO} ."
   ].each do |cmd|
     puts cmd
     run cmd
@@ -87,8 +123,32 @@ unless BUILD_ONLY
   # Push Phala-pRuntime
   REGISTRIES.each do |registry|
     [
-      "docker push #{registry}/#{PREBUILT_PRUNTIME_DOCKER_REPO}:#{PREBUILT_PRUNTIME_DOCKER_TAG}",
-      "docker push #{registry}/#{PREBUILT_PRUNTIME_DOCKER_REPO}"
+      "docker push #{registry}/#{PRUNTIME_DOCKER_REPO}:#{PRUNTIME_DOCKER_TAG}",
+      "docker push #{registry}/#{PRUNTIME_DOCKER_REPO}"
+    ].each do |cmd|
+      puts cmd
+      run cmd
+    end
+  end
+end
+
+# Build PRouter
+REGISTRIES.each do |registry|
+  [
+    "docker build --build-arg PHALA_GIT_TAG=#{PROUTER_GIT_TAG} -f prouter.Dockerfile -t #{registry}/#{PROUTER_DOCKER_REPO}:#{PROUTER_DOCKER_TAG} .",
+    "docker build --build-arg PHALA_GIT_TAG=#{PROUTER_GIT_TAG} -f prouter.Dockerfile -t #{registry}/#{PROUTER_DOCKER_REPO} ."
+  ].each do |cmd|
+    puts cmd
+    run cmd
+  end
+end
+
+unless BUILD_ONLY
+  # Push PRouter
+  REGISTRIES.each do |registry|
+    [
+      "docker push #{registry}/#{PROUTER_DOCKER_REPO}:#{PROUTER_DOCKER_TAG}",
+      "docker push #{registry}/#{PROUTER_DOCKER_REPO}"
     ].each do |cmd|
       puts cmd
       run cmd
@@ -144,28 +204,29 @@ end
 #   end
 # end
 
-# # Build Phala-Headers-cache
-# REGISTRIES.each do |registry|
-#   [
-#     "docker build --build-arg PHALA_GIT_TAG=#{HEADERS_CACHE_GIT_TAG} -f headers-cache.Dockerfile -t #{registry}/#{HEADERS_CACHE_DOCKER_REPO}:#{HEADERS_CACHE_DOCKER_TAG} .",
-#     "docker build --build-arg PHALA_GIT_TAG=#{HEADERS_CACHE_GIT_TAG} -f headers-cache.Dockerfile -t #{registry}/#{HEADERS_CACHE_DOCKER_REPO} ."
-#   ].each do |cmd|
-#     puts cmd
-#     run cmd
-#   end
-# end
+# Build Phala-Headers-cache
+REGISTRIES.each do |registry|
+  [
+    "docker build --build-arg PHALA_GIT_TAG=#{HEADERS_CACHE_GIT_TAG} -f headers-cache.Dockerfile -t #{registry}/#{HEADERS_CACHE_DOCKER_REPO}:#{HEADERS_CACHE_DOCKER_TAG} .",
+    "docker build --build-arg PHALA_GIT_TAG=#{HEADERS_CACHE_GIT_TAG} -f headers-cache.Dockerfile -t #{registry}/#{HEADERS_CACHE_DOCKER_REPO} ."
+  ].each do |cmd|
+    puts cmd
+    run cmd
+  end
+end
 
-# unless BUILD_ONLY
-#   # Push Phala-Headers-cache
-#   REGISTRIES.each do |registry|
-#     [
-#       "docker push #{registry}/#{HEADERS_CACHE_DOCKER_REPO}:#{HEADERS_CACHE_DOCKER_TAG}",
-#       "docker push #{registry}/#{HEADERS_CACHE_DOCKER_REPO}"
-#     ].each do |cmd|
-#       puts cmd
-#       run cmd
-#     end
-# end
+unless BUILD_ONLY
+  # Push Phala-Headers-cache
+  REGISTRIES.each do |registry|
+    [
+      "docker push #{registry}/#{HEADERS_CACHE_DOCKER_REPO}:#{HEADERS_CACHE_DOCKER_TAG}",
+      "docker push #{registry}/#{HEADERS_CACHE_DOCKER_REPO}"
+    ].each do |cmd|
+      puts cmd
+      run cmd
+    end
+  end
+end
 
 # # Build Phala-GK-Replay
 # REGISTRIES.each do |registry|
