@@ -26,18 +26,14 @@ RUN cd phala-blockchain/standalone/prouter && \
 
 FROM ubuntu:20.04
 
-WORKDIR /root
-
 RUN apt-get update && \
     DEBIAN_FRONTEND='noninteractive' apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates tini
 
-COPY --from=builder /root/prouter .
-RUN mkdir /root/data
+RUN mkdir -p /opt/prouter/data
+COPY --from=builder /root/prouter /opt/prouter
 
 ENV RUST_LOG="info"
 
-WORKDIR /root/data
+WORKDIR /opt/prouter/data
 
-ENTRYPOINT ["/usr/bin/tini", "--"]
-
-CMD ["/root/headers-cache"]
+ENTRYPOINT ["/usr/bin/tini", "--", "/opt/prouter/prouter"]

@@ -29,18 +29,14 @@ RUN cd phala-blockchain && \
 
 FROM ubuntu:20.04
 
-WORKDIR /root
-
 RUN apt-get update && \
     DEBIAN_FRONTEND='noninteractive' apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates tini
 
-COPY --from=builder /root/headers-cache .
-RUN mkdir /root/data
+RUN mkdir -p /opt/headers-cache/data
+COPY --from=builder /root/headers-cache /opt/headers-cache
 
 ENV RUST_LOG="info"
 
-WORKDIR /root/data
+WORKDIR /opt/headers-cache/data
 
-ENTRYPOINT ["/usr/bin/tini", "--"]
-
-CMD ["/root/headers-cache"]
+ENTRYPOINT ["/usr/bin/tini", "--", "/opt/headers-cache/headers-cache"]

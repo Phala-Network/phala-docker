@@ -29,14 +29,14 @@ RUN cd phala-blockchain && \
 
 FROM ubuntu:20.04
 
-WORKDIR /root
-
 RUN apt-get update && \
     DEBIAN_FRONTEND='noninteractive' apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates tini
 
 COPY --from=builder /root/replay .
 ADD dockerfile.d/start_replay.sh ./start_replay.sh
 RUN mkdir /root/data
+
+WORKDIR /root
 
 ENV RUST_LOG="info"
 ENV EXTRA_OPTS=''

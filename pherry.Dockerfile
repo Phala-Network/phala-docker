@@ -29,13 +29,13 @@ RUN cd phala-blockchain && \
 
 FROM ubuntu:20.04
 
-WORKDIR /root
-
 RUN apt-get update && \
     DEBIAN_FRONTEND='noninteractive' apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates tini
 
-COPY --from=builder /root/pherry .
-ADD dockerfile.d/start_pherry.sh ./start_pherry.sh
+COPY --from=builder /root/pherry /root
+ADD dockerfile.d/start_pherry.sh /root/start_pherry.sh
+
+WORKDIR /root
 
 ENV RUST_LOG="info"
 ENV PRUNTIME_ENDPOINT='http://127.0.0.1:8000'

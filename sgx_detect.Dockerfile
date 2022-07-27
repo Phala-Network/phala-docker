@@ -16,8 +16,6 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --de
 
 FROM ubuntu:20.04
 
-WORKDIR /root
-
 RUN apt-get update && \
     DEBIAN_FRONTEND='noninteractive' apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates tini
 
@@ -51,10 +49,12 @@ RUN curl -fsSL https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.k
         libsgx-ra-uefi && \
     apt-get clean -y
 
-COPY --from=builder /root/.cargo/bin/sgx-detect .
-ADD prebuilt/ra-test/app .
-ADD prebuilt/ra-test/enclave.signed.so .
-ADD dockerfile.d/start_sgx_detect.sh ./start_sgx_detect.sh
+COPY --from=builder /root/.cargo/bin/sgx-detect /root
+ADD prebuilt/ra-test/app /root
+ADD prebuilt/ra-test/enclave.signed.so /root
+ADD dockerfile.d/start_sgx_detect.sh /root/start_sgx_detect.sh
+
+WORKDIR /root
 
 ENV RUST_LOG="info"
 ENV SLEEP_BEFORE_START=12
