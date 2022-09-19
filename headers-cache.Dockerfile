@@ -1,6 +1,6 @@
 FROM ubuntu:20.04 AS builder
 
-ARG RUST_TOOLCHAIN='nightly-2022-07-11'
+ARG RUST_TOOLCHAIN='nightly-2022-09-08'
 ARG PHALA_GIT_REPO='https://github.com/Phala-Network/phala-blockchain.git'
 ARG PHALA_GIT_TAG='master'
 ARG PHALA_CARGO_PROFILE='release'
