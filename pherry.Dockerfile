@@ -15,7 +15,10 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --de
 
 RUN git clone --depth 1 --recurse-submodules --shallow-submodules -j 8 -b ${PHALA_GIT_TAG} ${PHALA_GIT_REPO} phala-blockchain
 
-RUN cd phala-blockchain && \
+RUN cd $HOME/phala-blockchain && \
+    PATH="$HOME/.cargo/bin:$PATH" cargo fetch
+
+RUN cd $HOME/phala-blockchain && \
     PATH="$HOME/.cargo/bin:$PATH" cargo build --profile $PHALA_CARGO_PROFILE && \
     cp ./target/$PHALA_CARGO_PROFILE/phala-node /root && \
     cp ./target/$PHALA_CARGO_PROFILE/pherry /root && \

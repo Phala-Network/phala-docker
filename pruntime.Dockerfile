@@ -15,6 +15,9 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --de
 
 RUN git clone --depth 1 --recurse-submodules --shallow-submodules -j 8 -b ${PHALA_GIT_TAG} ${PHALA_GIT_REPO} phala-blockchain
 
+RUN cd $HOME/phala-blockchain/standalone/pruntime && \
+    PATH="$HOME/.cargo/bin:$PATH" cargo fetch
+
 RUN curl -fsSL https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.key | apt-key add - && \
     echo 'deb [arch=amd64] https://download.01.org/intel-sgx/sgx_repo/ubuntu focal main' | tee /etc/apt/sources.list.d/intel-sgx.list
 
@@ -55,6 +58,8 @@ RUN apt-get update && \
 RUN DEBIAN_FRONTEND='noninteractive' apt-get install -y rsync unzip lsb-release debhelper gettext cmake reprepro autoconf automake bison build-essential curl dpkg-dev expect flex gcc gdb git git-core gnupg kmod libboost-system-dev libboost-thread-dev libcurl4-openssl-dev libiptcdata0-dev libjsoncpp-dev liblog4cpp5-dev libprotobuf-dev libssl-dev libtool libxml2-dev uuid-dev ocaml ocamlbuild pkg-config protobuf-compiler gawk nasm ninja-build python3 python3-pip python3-click python3-jinja2 texinfo llvm clang libclang-dev && \
     apt-get clean -y
 
+RUN python3 -m pip install -U protobuf==3.20
+
 ARG RA_METHOD="epid"
 ARG IAS_SPID=""
 ARG IAS_API_KEY=""
@@ -64,7 +69,7 @@ ARG PRUNTIME_DATA_DIR="/opt/pruntime/data"
 
 COPY priv.build_stage .priv
 
-RUN cd phala-blockchain/standalone/pruntime/gramine-build && \
+RUN cd $HOME/phala-blockchain/standalone/pruntime/gramine-build && \
     PATH="$PATH:$HOME/.cargo/bin" make dist PREFIX=/opt/pruntime && \
     PATH="$PATH:$HOME/.cargo/bin" make clean && \
     rm -rf $HOME/.priv/*
@@ -112,6 +117,8 @@ RUN apt-get update && \
         sgx-aesm-service \
         gramine && \
     apt-get clean -y
+
+RUN python3 -m pip install -U protobuf==3.20
 
 COPY --from=builder /opt/pruntime /opt/pruntime
 ADD dockerfile.d/start_pruntime.sh /opt/pruntime/start_pruntime.sh
