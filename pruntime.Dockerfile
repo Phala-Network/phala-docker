@@ -1,13 +1,14 @@
 FROM ubuntu:20.04 AS builder
 
+ARG TZ='Etc/UTC'
 ARG RUST_TOOLCHAIN='nightly-2022-09-08'
 ARG PHALA_GIT_REPO='https://github.com/Phala-Network/phala-blockchain.git'
 ARG PHALA_GIT_TAG='master'
-ARG PHALA_CARGO_PROFILE='release'
 
 WORKDIR /root
 
-RUN apt-get update && \
+RUN DEBIAN_FRONTEND='noninteractive' apt-get update && \
+    DEBIAN_FRONTEND='noninteractive' apt-get upgrade -y && \
     DEBIAN_FRONTEND='noninteractive' apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates cmake pkg-config libssl-dev git build-essential llvm clang libclang-dev rsync libboost-all-dev libssl-dev zlib1g-dev miniupnpc
 
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain="${RUST_TOOLCHAIN}" && \
@@ -24,7 +25,7 @@ RUN curl -fsSL https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.k
 RUN curl -fsSLo /usr/share/keyrings/gramine-keyring.gpg https://packages.gramineproject.io/gramine-keyring.gpg && \
     echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/gramine-keyring.gpg] https://packages.gramineproject.io/ stable main' | tee /etc/apt/sources.list.d/gramine.list
 
-RUN apt-get update && \
+RUN DEBIAN_FRONTEND='noninteractive' apt-get update && \
     DEBIAN_FRONTEND='noninteractive' apt-get install -y \
         libsgx-headers \
         libsgx-ae-epid \
@@ -56,10 +57,11 @@ RUN apt-get update && \
     apt-get clean -y
 
 RUN DEBIAN_FRONTEND='noninteractive' apt-get install -y rsync unzip lsb-release debhelper gettext cmake reprepro autoconf automake bison build-essential curl dpkg-dev expect flex gcc gdb git git-core gnupg kmod libboost-system-dev libboost-thread-dev libcurl4-openssl-dev libiptcdata0-dev libjsoncpp-dev liblog4cpp5-dev libprotobuf-dev libssl-dev libtool libxml2-dev uuid-dev ocaml ocamlbuild pkg-config protobuf-compiler gawk nasm ninja-build python3 python3-pip python3-click python3-jinja2 texinfo llvm clang libclang-dev && \
-    apt-get clean -y
+    DEBIAN_FRONTEND='noninteractive' apt-get clean -y
 
-RUN python3 -m pip install -U protobuf==3.20
+RUN python3 -m pip install -U protobuf==3.20.3
 
+ARG PHALA_CARGO_PROFILE='release'
 ARG RA_METHOD="epid"
 ARG IAS_SPID=""
 ARG IAS_API_KEY=""
@@ -78,7 +80,10 @@ RUN cd $HOME/phala-blockchain/standalone/pruntime/gramine-build && \
 
 FROM ubuntu:20.04
 
-RUN apt-get update && \
+ARG TZ='Etc/UTC'
+
+RUN DEBIAN_FRONTEND='noninteractive' apt-get update && \
+    DEBIAN_FRONTEND='noninteractive' apt-get upgrade -y && \
     DEBIAN_FRONTEND='noninteractive' apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates git tini
 
 RUN curl -fsSL https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.key | apt-key add - && \
@@ -87,8 +92,9 @@ RUN curl -fsSL https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.k
 RUN curl -fsSLo /usr/share/keyrings/gramine-keyring.gpg https://packages.gramineproject.io/gramine-keyring.gpg && \
     echo 'deb [arch=amd64 signed-by=/usr/share/keyrings/gramine-keyring.gpg] https://packages.gramineproject.io/ stable main' | tee /etc/apt/sources.list.d/gramine.list
 
-RUN apt-get update && \
+RUN DEBIAN_FRONTEND='noninteractive' apt-get update && \
     DEBIAN_FRONTEND='noninteractive' apt-get install -y \
+        python3 python3-pip \
         libsgx-headers \
         libsgx-ae-epid \
         libsgx-ae-le \
@@ -116,9 +122,9 @@ RUN apt-get update && \
         libsgx-dcap-default-qpl \
         sgx-aesm-service \
         gramine && \
-    apt-get clean -y
+    DEBIAN_FRONTEND='noninteractive' apt-get clean -y
 
-RUN python3 -m pip install -U protobuf==3.20
+RUN python3 -m pip install -U protobuf==3.20.3
 
 COPY --from=builder /opt/pruntime /opt/pruntime
 ADD dockerfile.d/start_pruntime.sh /opt/pruntime/start_pruntime.sh

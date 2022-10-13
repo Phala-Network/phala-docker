@@ -16,8 +16,11 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --de
 
 FROM ubuntu:20.04
 
-RUN apt-get update && \
-    DEBIAN_FRONTEND='noninteractive' apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates tini
+ARG TZ='Etc/UTC'
+
+RUN DEBIAN_FRONTEND='noninteractive' apt-get update && \
+    DEBIAN_FRONTEND='noninteractive' apt-get upgrade -y && \
+    DEBIAN_FRONTEND='noninteractive' apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates git tini
 
 RUN curl -fsSL https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.key | apt-key add - && \
     add-apt-repository "deb https://download.01.org/intel-sgx/sgx_repo/ubuntu focal main" && \
