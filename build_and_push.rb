@@ -5,7 +5,7 @@ BUILD_ONLY = false
 GIT_TAG = "master"
 
 COMMON_CHAIN_NAME = "phala-dev"
-COMMON_TAG = "22101901"
+COMMON_TAG = "22112401"
 
 NODE_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-node"
 NODE_DOCKER_TAG = COMMON_TAG
@@ -35,7 +35,7 @@ SGX_DETECT_DOCKER_REPO = "phala-sgx_detect"
 
 REGISTRIES = [
   "jasl123",
-  # "phalanetwork",
+  "phalanetwork",
   # "swr.cn-east-3.myhuaweicloud.com/phala",
   # "docker.pkg.github.com/phala-network/phala-docker"
 ]
@@ -180,53 +180,53 @@ end
 #   end
 # end
 
-# Build Phala-Pherry
-REGISTRIES.each do |registry|
-  [
-    "docker build --build-arg PHALA_GIT_TAG=#{PHERRY_GIT_TAG} -f pherry.Dockerfile -t #{registry}/#{PHERRY_DOCKER_REPO}:#{PHERRY_DOCKER_TAG} .",
-    "docker build --build-arg PHALA_GIT_TAG=#{PHERRY_GIT_TAG} -f pherry.Dockerfile -t #{registry}/#{PHERRY_DOCKER_REPO} ."
-  ].each do |cmd|
-    puts cmd
-    run cmd
-  end
-end
+# # Build Phala-Pherry
+# REGISTRIES.each do |registry|
+#   [
+#     "docker build --build-arg PHALA_GIT_TAG=#{PHERRY_GIT_TAG} -f pherry.Dockerfile -t #{registry}/#{PHERRY_DOCKER_REPO}:#{PHERRY_DOCKER_TAG} .",
+#     "docker build --build-arg PHALA_GIT_TAG=#{PHERRY_GIT_TAG} -f pherry.Dockerfile -t #{registry}/#{PHERRY_DOCKER_REPO} ."
+#   ].each do |cmd|
+#     puts cmd
+#     run cmd
+#   end
+# end
 
-unless BUILD_ONLY
-  # Push Phala-Pherry
-  REGISTRIES.each do |registry|
-    [
-      "docker push #{registry}/#{PHERRY_DOCKER_REPO}:#{PHERRY_DOCKER_TAG}",
-      "docker push #{registry}/#{PHERRY_DOCKER_REPO}"
-    ].each do |cmd|
-      puts cmd
-      run cmd
-    end
-  end
-end
+# unless BUILD_ONLY
+#   # Push Phala-Pherry
+#   REGISTRIES.each do |registry|
+#     [
+#       "docker push #{registry}/#{PHERRY_DOCKER_REPO}:#{PHERRY_DOCKER_TAG}",
+#       "docker push #{registry}/#{PHERRY_DOCKER_REPO}"
+#     ].each do |cmd|
+#       puts cmd
+#       run cmd
+#     end
+#   end
+# end
 
-# Build Phala-Headers-cache
-REGISTRIES.each do |registry|
-  [
-    "docker build --build-arg PHALA_GIT_TAG=#{HEADERS_CACHE_GIT_TAG} -f headers-cache.Dockerfile -t #{registry}/#{HEADERS_CACHE_DOCKER_REPO}:#{HEADERS_CACHE_DOCKER_TAG} .",
-    "docker build --build-arg PHALA_GIT_TAG=#{HEADERS_CACHE_GIT_TAG} -f headers-cache.Dockerfile -t #{registry}/#{HEADERS_CACHE_DOCKER_REPO} ."
-  ].each do |cmd|
-    puts cmd
-    run cmd
-  end
-end
+# # Build Phala-Headers-cache
+# REGISTRIES.each do |registry|
+#   [
+#     "docker build --build-arg PHALA_GIT_TAG=#{HEADERS_CACHE_GIT_TAG} -f headers-cache.Dockerfile -t #{registry}/#{HEADERS_CACHE_DOCKER_REPO}:#{HEADERS_CACHE_DOCKER_TAG} .",
+#     "docker build --build-arg PHALA_GIT_TAG=#{HEADERS_CACHE_GIT_TAG} -f headers-cache.Dockerfile -t #{registry}/#{HEADERS_CACHE_DOCKER_REPO} ."
+#   ].each do |cmd|
+#     puts cmd
+#     run cmd
+#   end
+# end
 
-unless BUILD_ONLY
-  # Push Phala-Headers-cache
-  REGISTRIES.each do |registry|
-    [
-      "docker push #{registry}/#{HEADERS_CACHE_DOCKER_REPO}:#{HEADERS_CACHE_DOCKER_TAG}",
-      "docker push #{registry}/#{HEADERS_CACHE_DOCKER_REPO}"
-    ].each do |cmd|
-      puts cmd
-      run cmd
-    end
-  end
-end
+# unless BUILD_ONLY
+#   # Push Phala-Headers-cache
+#   REGISTRIES.each do |registry|
+#     [
+#       "docker push #{registry}/#{HEADERS_CACHE_DOCKER_REPO}:#{HEADERS_CACHE_DOCKER_TAG}",
+#       "docker push #{registry}/#{HEADERS_CACHE_DOCKER_REPO}"
+#     ].each do |cmd|
+#       puts cmd
+#       run cmd
+#     end
+#   end
+# end
 
 # # Build Phala-GK-Replay
 # REGISTRIES.each do |registry|
