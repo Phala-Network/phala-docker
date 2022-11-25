@@ -10,7 +10,7 @@ RUN apt-get update && \
 RUN curl -fsSL https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.key | apt-key add - && \
     add-apt-repository "deb https://download.01.org/intel-sgx/sgx_repo/ubuntu focal main" && \
     apt-get install -y \
-        libsgx-headers \
+        sgx-aesm-service \
         libsgx-ae-epid \
         libsgx-ae-le \
         libsgx-ae-pce \
@@ -20,19 +20,15 @@ RUN curl -fsSL https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.k
         libsgx-aesm-pce-plugin \
         libsgx-aesm-quote-ex-plugin \
         libsgx-enclave-common \
-        libsgx-enclave-common-dev \
         libsgx-epid \
-        libsgx-epid-dev \
         libsgx-launch \
-        libsgx-launch-dev \
         libsgx-quote-ex \
-        libsgx-quote-ex-dev \
         libsgx-uae-service \
         libsgx-urts \
-        sgx-aesm-service \
         libsgx-ae-qe3 \
         libsgx-pce-logic \
         libsgx-qe3-logic \
+        libsgx-dcap-default-qpl \
         libsgx-ra-network \
         libsgx-ra-uefi && \
     apt-get clean -y
