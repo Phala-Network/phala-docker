@@ -1,4 +1,4 @@
-FROM ubuntu:22.04 AS builder
+FROM ubuntu:20.04 AS builder
 
 ARG TZ='Etc/UTC'
 ARG RUST_TOOLCHAIN='nightly-2022-10-25'
@@ -33,7 +33,7 @@ RUN cd $HOME/phala-blockchain && \
 
 # ====
 
-FROM ubuntu:22.04
+FROM ubuntu:20.04
 
 ARG TZ='Etc/UTC'
 
