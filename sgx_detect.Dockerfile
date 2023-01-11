@@ -1,11 +1,11 @@
 FROM ubuntu:20.04 AS builder
 
-ARG RUST_TOOLCHAIN='nightly-2021-11-11'
+ARG RUST_TOOLCHAIN='nightly-2022-10-22'
 
 WORKDIR /root
 
 RUN apt-get update && \
-    DEBIAN_FRONTEND='noninteractive' apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates cmake pkg-config libssl-dev git build-essential llvm clang libclang-dev rsync libboost-all-dev libssl-dev zlib1g-dev miniupnpc
+    DEBIAN_FRONTEND='noninteractive' apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates cmake pkg-config libssl-dev git build-essential llvm clang libclang-dev rsync libboost-all-dev libssl-dev zlib1g-dev miniupnpc protobuf-compiler
 
 RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --default-toolchain="${RUST_TOOLCHAIN}" && \
     $HOME/.cargo/bin/rustup target add x86_64-fortanix-unknown-sgx --toolchain "${RUST_TOOLCHAIN}" && \
