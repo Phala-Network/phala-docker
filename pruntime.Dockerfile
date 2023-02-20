@@ -1,7 +1,7 @@
-FROM ubuntu:22.04 AS builder
+FROM --platform=linux/amd64 ubuntu:22.04 AS builder
 
 ARG TZ='Etc/UTC'
-ARG RUST_TOOLCHAIN='nightly-2022-10-25'
+ARG RUST_TOOLCHAIN='nightly-2023-02-03'
 ARG PHALA_GIT_REPO='https://github.com/Phala-Network/phala-blockchain.git'
 ARG PHALA_GIT_TAG='master'
 
@@ -78,7 +78,7 @@ RUN cd $HOME/phala-blockchain/standalone/pruntime/gramine-build && \
 
 # ====
 
-FROM ubuntu:22.04
+FROM --platform=linux/amd64 ubuntu:22.04
 
 ARG TZ='Etc/UTC'
 
