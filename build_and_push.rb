@@ -5,7 +5,7 @@ BUILD_ONLY = false
 GIT_TAG = "master"
 
 COMMON_CHAIN_NAME = "phala-dev"
-COMMON_TAG = "22112401"
+COMMON_TAG = "23022101"
 
 NODE_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-node"
 NODE_DOCKER_TAG = COMMON_TAG
@@ -35,7 +35,7 @@ SGX_DETECT_DOCKER_REPO = "phala-sgx_detect"
 
 REGISTRIES = [
   "jasl123",
-  "phalanetwork",
+  # "phalanetwork",
   # "swr.cn-east-3.myhuaweicloud.com/phala",
   # "docker.pkg.github.com/phala-network/phala-docker"
 ]
@@ -102,17 +102,18 @@ end
 # end
 
 # Build Phala-pRuntime
+SGX_SIGNER_KEY = "Enclave_private.prod.decrypted.pem"
 IAS_SPID = ENV.fetch("IAS_SPID")
 IAS_API_KEY = ENV.fetch("IAS_API_KEY")
 IAS_ENV = "PROD"
 RA_METHOD = "epid"
-SGX_SIGNER_KEY = "Enclave_private.prod.decrypted.pem"
-PRUNTIME_DATA_DIR = "/opt/pruntime/data"
+PRUNTIME_VERSION = ENV.fetch("PRUNTIME_VERSION", PRUNTIME_DOCKER_TAG)
+PRUNTIME_DATA_DIR = "/opt/pruntime/data/#{PRUNTIME_VERSION}"
 
 REGISTRIES.each do |registry|
   [
-    "docker build --build-arg PHALA_GIT_TAG=#{PRUNTIME_GIT_TAG} --build-arg SGX_SIGNER_KEY=/root/.priv/#{SGX_SIGNER_KEY} --build-arg IAS_SPID=#{IAS_SPID} --build-arg IAS_API_KEY=#{IAS_API_KEY} --build-arg IAS_ENV=#{IAS_ENV} --build-arg RA_METHOD=#{RA_METHOD} --build-arg PRUNTIME_DATA_DIR=#{PRUNTIME_DATA_DIR} -f pruntime.Dockerfile -t #{registry}/#{PRUNTIME_DOCKER_REPO}:#{PRUNTIME_DOCKER_TAG} .",
-    "docker build --build-arg PHALA_GIT_TAG=#{PRUNTIME_GIT_TAG} --build-arg SGX_SIGNER_KEY=/root/.priv/#{SGX_SIGNER_KEY} --build-arg IAS_SPID=#{IAS_SPID} --build-arg IAS_API_KEY=#{IAS_API_KEY} --build-arg IAS_ENV=#{IAS_ENV} --build-arg RA_METHOD=#{RA_METHOD} --build-arg PRUNTIME_DATA_DIR=#{PRUNTIME_DATA_DIR} -f pruntime.Dockerfile -t #{registry}/#{PRUNTIME_DOCKER_REPO} ."
+    "docker build --build-arg PHALA_GIT_TAG=#{PRUNTIME_GIT_TAG} --build-arg SGX_SIGNER_KEY=/root/.priv/#{SGX_SIGNER_KEY} --build-arg IAS_SPID=#{IAS_SPID} --build-arg IAS_API_KEY=#{IAS_API_KEY} --build-arg IAS_ENV=#{IAS_ENV} --build-arg RA_METHOD=#{RA_METHOD} --build-arg PRUNTIME_VERSION=#{PRUNTIME_VERSION} --build-arg PRUNTIME_DATA_DIR=#{PRUNTIME_DATA_DIR} -f pruntime.Dockerfile -t #{registry}/#{PRUNTIME_DOCKER_REPO}:#{PRUNTIME_DOCKER_TAG} .",
+    "docker build --build-arg PHALA_GIT_TAG=#{PRUNTIME_GIT_TAG} --build-arg SGX_SIGNER_KEY=/root/.priv/#{SGX_SIGNER_KEY} --build-arg IAS_SPID=#{IAS_SPID} --build-arg IAS_API_KEY=#{IAS_API_KEY} --build-arg IAS_ENV=#{IAS_ENV} --build-arg RA_METHOD=#{RA_METHOD} --build-arg PRUNTIME_VERSION=#{PRUNTIME_VERSION} --build-arg PRUNTIME_DATA_DIR=#{PRUNTIME_DATA_DIR} -f pruntime.Dockerfile -t #{registry}/#{PRUNTIME_DOCKER_REPO} ."
   ].each do |cmd|
     puts cmd
     run cmd
@@ -132,29 +133,29 @@ unless BUILD_ONLY
   end
 end
 
-# Build PRouter
-REGISTRIES.each do |registry|
-  [
-    "docker build --build-arg PHALA_GIT_TAG=#{PROUTER_GIT_TAG} -f prouter.Dockerfile -t #{registry}/#{PROUTER_DOCKER_REPO}:#{PROUTER_DOCKER_TAG} .",
-    "docker build --build-arg PHALA_GIT_TAG=#{PROUTER_GIT_TAG} -f prouter.Dockerfile -t #{registry}/#{PROUTER_DOCKER_REPO} ."
-  ].each do |cmd|
-    puts cmd
-    run cmd
-  end
-end
+# # Build PRouter
+# REGISTRIES.each do |registry|
+#   [
+#     "docker build --build-arg PHALA_GIT_TAG=#{PROUTER_GIT_TAG} -f prouter.Dockerfile -t #{registry}/#{PROUTER_DOCKER_REPO}:#{PROUTER_DOCKER_TAG} .",
+#     "docker build --build-arg PHALA_GIT_TAG=#{PROUTER_GIT_TAG} -f prouter.Dockerfile -t #{registry}/#{PROUTER_DOCKER_REPO} ."
+#   ].each do |cmd|
+#     puts cmd
+#     run cmd
+#   end
+# end
 
-unless BUILD_ONLY
-  # Push PRouter
-  REGISTRIES.each do |registry|
-    [
-      "docker push #{registry}/#{PROUTER_DOCKER_REPO}:#{PROUTER_DOCKER_TAG}",
-      "docker push #{registry}/#{PROUTER_DOCKER_REPO}"
-    ].each do |cmd|
-      puts cmd
-      run cmd
-    end
-  end
-end
+# unless BUILD_ONLY
+#   # Push PRouter
+#   REGISTRIES.each do |registry|
+#     [
+#       "docker push #{registry}/#{PROUTER_DOCKER_REPO}:#{PROUTER_DOCKER_TAG}",
+#       "docker push #{registry}/#{PROUTER_DOCKER_REPO}"
+#     ].each do |cmd|
+#       puts cmd
+#       run cmd
+#     end
+#   end
+# end
 
 # # Build Phala-Node
 # REGISTRIES.each do |registry|

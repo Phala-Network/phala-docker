@@ -67,12 +67,15 @@ ARG IAS_SPID=""
 ARG IAS_API_KEY=""
 ARG IAS_ENV="DEV"
 ARG SGX_SIGNER_KEY="private.dev.pem"
-ARG PRUNTIME_DATA_DIR="/opt/pruntime/data"
+
+ARG PRUNTIME_VERSION=${PHALA_GIT_TAG}
+ARG PRUNTIME_DIR=/opt/pruntime/releases/${PRUNTIME_VERSION}
+ARG PRUNTIME_DATA_DIR=/opt/pruntime/data/${PRUNTIME_VERSION}
 
 COPY priv.build_stage .priv
 
 RUN cd $HOME/phala-blockchain/standalone/pruntime/gramine-build && \
-    PATH="$PATH:$HOME/.cargo/bin" make dist PREFIX=/opt/pruntime && \
+    PATH="$PATH:$HOME/.cargo/bin" make dist PREFIX=${PRUNTIME_DIR} && \
     PATH="$PATH:$HOME/.cargo/bin" make clean && \
     rm -rf $HOME/.priv/*
 
@@ -126,21 +129,29 @@ RUN DEBIAN_FRONTEND='noninteractive' apt-get update && \
 
 RUN python3 -m pip install -U protobuf==3.20.3
 
-COPY --from=builder /opt/pruntime /opt/pruntime
-ADD dockerfile.d/start_pruntime.sh /opt/pruntime/start_pruntime.sh
+ARG PHALA_GIT_TAG='master'
+ARG PRUNTIME_VERSION=${PHALA_GIT_TAG}
+ARG PRUNTIME_DIR=/opt/pruntime/releases/${PRUNTIME_VERSION}
+ARG PRUNTIME_DATA_DIR=/opt/pruntime/data/${PRUNTIME_VERSION}
+
+COPY --from=builder ${PRUNTIME_DIR} ${PRUNTIME_DIR}
+ADD dockerfile.d/start_pruntime.sh ${PRUNTIME_DIR}/start_pruntime.sh
+
+RUN ln -s ${PRUNTIME_DIR} /opt/pruntime/releases/current
 
 # STOPSIGNAL SIGQUIT
 
-WORKDIR /opt/pruntime
+WORKDIR /opt/pruntime/releases/current
 
 ENV SGX=1
 ENV SKIP_AESMD=0
 ENV SLEEP_BEFORE_START=6
 ENV RUST_LOG="info"
 ENV EXTRA_OPTS=""
+ENV DATA_DIR=${PRUNTIME_DATA_DIR}
 
 EXPOSE 8000
 
 ENTRYPOINT ["/usr/bin/tini", "--"]
 
-CMD ["/bin/bash", "/opt/pruntime/start_pruntime.sh"]
+CMD ["/bin/bash", "/opt/pruntime/releases/current/start_pruntime.sh"]
