@@ -39,7 +39,7 @@ ARG TZ='Etc/UTC'
 
 RUN DEBIAN_FRONTEND='noninteractive' apt-get update && \
     DEBIAN_FRONTEND='noninteractive' apt-get upgrade -y && \
-    DEBIAN_FRONTEND='noninteractive' apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates git tini
+    DEBIAN_FRONTEND='noninteractive' apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates git unzip tini
 
 COPY --from=builder /root/phala-node /root
 ADD dockerfile.d/start_node.sh /root/start_node.sh

@@ -5,7 +5,7 @@ BUILD_ONLY = false
 GIT_TAG = "master"
 
 COMMON_CHAIN_NAME = "phala-dev"
-COMMON_TAG = "23022101"
+COMMON_TAG = "23022501"
 
 NODE_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-node"
 NODE_DOCKER_TAG = COMMON_TAG
@@ -29,7 +29,10 @@ PROUTER_GIT_TAG = GIT_TAG
 
 PRUNTIME_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-pruntime"
 PRUNTIME_DOCKER_TAG = COMMON_TAG
-PRUNTIME_GIT_TAG = GIT_TAG
+PRUNTIME_GIT_TAG = "pruntime-musl" # GIT_TAG
+
+PRUNTIME_WITH_HANDOVER_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-pruntime-with-handover"
+PRUNTIME_WITH_HANDOVER_DOCKER_TAG = PRUNTIME_DOCKER_TAG
 
 SGX_DETECT_DOCKER_REPO = "phala-sgx_detect"
 
@@ -132,6 +135,30 @@ unless BUILD_ONLY
     end
   end
 end
+
+REGISTRIES.each do |registry|
+  [
+    "docker build --build-arg PRUNTIME_BASE_IMAGE=#{registry}/#{PRUNTIME_DOCKER_REPO}:#{PRUNTIME_DOCKER_TAG} --build-arg PRUNTIME_VERSION=#{PRUNTIME_VERSION} --build-arg REAL_PRUNTIME_DATA_DIR=#{REAL_PRUNTIME_DATA_DIR} -f pruntime-with-handover.Dockerfile -t #{registry}/#{PRUNTIME_WITH_HANDOVER_DOCKER_REPO}:#{PRUNTIME_WITH_HANDOVER_DOCKER_TAG} .",
+    "docker build --build-arg PRUNTIME_BASE_IMAGE=#{registry}/#{PRUNTIME_DOCKER_REPO}:#{PRUNTIME_DOCKER_TAG} --build-arg PRUNTIME_VERSION=#{PRUNTIME_VERSION} --build-arg REAL_PRUNTIME_DATA_DIR=#{REAL_PRUNTIME_DATA_DIR} -f pruntime-with-handover.Dockerfile -t #{registry}/#{PRUNTIME_WITH_HANDOVER_DOCKER_REPO} ."
+  ].each do |cmd|
+    puts cmd
+    run cmd
+  end
+end
+
+unless BUILD_ONLY
+  # Push Phala-pRuntime
+  REGISTRIES.each do |registry|
+    [
+      "docker push #{registry}/#{PRUNTIME_WITH_HANDOVER_DOCKER_REPO}:#{PRUNTIME_WITH_HANDOVER_DOCKER_TAG}",
+      "docker push #{registry}/#{PRUNTIME_WITH_HANDOVER_DOCKER_REPO}"
+    ].each do |cmd|
+      puts cmd
+      run cmd
+    end
+  end
+end
+
 
 # # Build PRouter
 # REGISTRIES.each do |registry|

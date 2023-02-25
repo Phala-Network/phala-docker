@@ -70,7 +70,7 @@ ARG SGX_SIGNER_KEY="private.dev.pem"
 
 ARG PRUNTIME_VERSION="${PHALA_GIT_TAG}"
 ARG PRUNTIME_DIR="/opt/pruntime/releases/${PRUNTIME_VERSION}"
-ARG PRUNTIME_DATA_DIR="${PRUNTIME_DIR}/data"
+ARG PRUNTIME_DATA_DIR="data" # "${PRUNTIME_DIR}/data"
 
 COPY priv.build_stage .priv
 
@@ -87,7 +87,7 @@ ARG TZ="Etc/UTC"
 
 RUN DEBIAN_FRONTEND="noninteractive" apt-get update && \
     DEBIAN_FRONTEND="noninteractive" apt-get upgrade -y && \
-    DEBIAN_FRONTEND="noninteractive" apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates git tini
+    DEBIAN_FRONTEND="noninteractive" apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates git unzip tini
 
 RUN curl -fsSL https://download.01.org/intel-sgx/sgx_repo/ubuntu/intel-sgx-deb.key | apt-key add - && \
     echo "deb [arch=amd64] https://download.01.org/intel-sgx/sgx_repo/ubuntu jammy main" | tee /etc/apt/sources.list.d/intel-sgx.list
@@ -151,7 +151,6 @@ ENV SKIP_AESMD=0
 ENV SLEEP_BEFORE_START=6
 ENV RUST_LOG="info"
 ENV EXTRA_OPTS=""
-ENV DATA_DIR="${REAL_PRUNTIME_DATA_DIR}"
 
 EXPOSE 8000
 
