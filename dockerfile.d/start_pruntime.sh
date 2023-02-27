@@ -30,6 +30,9 @@ DATA_DIR=${DATA_DIR:-"${WORK_DIR}/data"}
 echo "Work dir '${WORK_DIR}'"
 echo "Data dir '${DATA_DIR}'"
 
+if [ -L ${DATA_DIR} ] && [ ! -e ${DATA_DIR} ]; then
+  mkdir -p $(readlink -f $DATA_DIR)
+fi
 mkdir -p "${DATA_DIR}/protected_files"
 mkdir -p "${DATA_DIR}/storage_files"
 
