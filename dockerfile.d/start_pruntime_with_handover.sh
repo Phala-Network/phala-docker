@@ -22,4 +22,9 @@ if [ "$SGX" -eq 1 ] && [ "$SKIP_AESMD" -eq 0 ]; then
 fi
 
 cd /opt/pruntime && deno run --allow-all pruntime_handover.ts
-cd /opt/pruntime/releases/current && SKIP_AESMD=1 ./start_pruntime.sh
+if [ $? -eq 0 ]
+then
+  cd /opt/pruntime/releases/current && SKIP_AESMD=1 ./start_pruntime.sh
+else
+  exit 1
+fi
