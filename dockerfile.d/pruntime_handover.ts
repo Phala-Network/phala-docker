@@ -62,7 +62,6 @@ const exists = async (filename: string): Promise<boolean> => {
   }
 };
 
-
 const currentPath = await Deno.realPath("/opt/pruntime/releases/current");
 console.log(currentPath)
 
