@@ -63,6 +63,7 @@ const exists = async (filename: string): Promise<boolean> => {
 };
 
 const currentPath = await Deno.realPath("/opt/pruntime/releases/current");
+const version = currentPath.split("/").pop();
 console.log(currentPath)
 
 // Check current (the image contains) has initialized
@@ -83,6 +84,18 @@ for await (const dirEntry of Deno.readDir('/opt/pruntime/backups')) {
 
 if (previousPath === undefined) {
   console.log("No previous version, no need to handover!");
+
+  // Copy current to backups
+  try { copySync(currentPath, `/opt/pruntime/backups/${version}`) } catch (err) { console.error(err.message) }
+
+  Deno.exit(0);
+}
+
+const previousVersion = previousPath.split("/").pop();
+console.log(previousPath);
+
+if (version == previousVersion) {
+  console.log("same version, no need to handover")
   Deno.exit(0);
 }
 
@@ -124,7 +137,6 @@ try { Deno.removeSync(storagePath) } catch (err) { console.error(err.message) }
 try { copySync(previousStoragePath, storagePath) } catch (err) { console.error(err.message) }
 
 // Copy current to backups
-const version = currentPath.split("/").pop()
 try { copySync(currentPath, `/opt/pruntime/backups/${version}`) } catch (err) { console.error(err.message) }
 
 Deno.exit(0);
