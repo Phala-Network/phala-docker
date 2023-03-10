@@ -21,12 +21,6 @@ if [ "$SGX" -eq 1 ] && [ "$SKIP_AESMD" -eq 0 ]; then
   fi
 fi
 
-GRAMINE_SGX_GET_TOKEN_BIN=${GRAMINE_SGX_GET_TOKEN_BIN:-"/usr/bin/gramine-sgx-get-token"}
-if [[ ! -f "/opt/pruntime/releases/current/pruntime.token" ]]; then
-  echo "Generating token"
-  $GRAMINE_SGX_GET_TOKEN_BIN --sig "/opt/pruntime/releases/current/pruntime.sig" --output "/opt/pruntime/releases/current/pruntime.token"
-fi
-
 cd /opt/pruntime && deno run --allow-all pruntime_handover.ts
 if [ $? -eq 0 ]
 then

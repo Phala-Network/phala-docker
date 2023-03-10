@@ -21,14 +21,13 @@ if [ "$SGX" -eq 1 ] && [ "$SKIP_AESMD" -eq 0 ]; then
   fi
 fi
 
-GRAMINE_SGX_BIN=${GRAMINE_BIN:-"/usr/bin/gramine-sgx"}
-GRAMINE_SGX_GET_TOKEN_BIN=${GRAMINE_SGX_GET_TOKEN_BIN:-"/usr/bin/gramine-sgx-get-token"}
-
 WORK_DIR=$(dirname $(readlink -f "$0"))
 DATA_DIR=${DATA_DIR:-"${WORK_DIR}/data"}
 
 echo "Work dir '${WORK_DIR}'"
 echo "Data dir '${DATA_DIR}'"
+
+GRAMINE_SGX_BIN=${GRAMINE_SGX_BIN:-"${WORK_DIR}/gramine-sgx"}
 
 if [ -L ${DATA_DIR} ] && [ ! -e ${DATA_DIR} ]; then
   mkdir -p $(readlink -f $DATA_DIR)
@@ -41,11 +40,6 @@ if [ "$SGX" -eq 0 ]; then
   echo "PRuntime will running in software mode"
   cd $WORK_DIR && pruntime --allow-cors $EXTRA_OPTS
 else
-  if [[ ! -f "$WORK_DIR/pruntime.token" ]]; then
-    echo "Generating token"
-    $GRAMINE_SGX_GET_TOKEN_BIN --sig "$WORK_DIR/pruntime.sig" --output "$WORK_DIR/pruntime.token"
-  fi
-
   echo "PRuntime will running in hardware mode"
   cd $WORK_DIR && $GRAMINE_SGX_BIN pruntime --allow-cors $EXTRA_OPTS
 fi
