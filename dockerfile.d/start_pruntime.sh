@@ -28,6 +28,7 @@ echo "Work dir '${WORK_DIR}'"
 echo "Data dir '${DATA_DIR}'"
 
 GRAMINE_SGX_BIN=${GRAMINE_SGX_BIN:-"${WORK_DIR}/gramine-sgx"}
+GRAMINE_DIRECT_BIN=${GRAMINE_DIRECT_BIN:-"gramine-direct"}
 
 if [ -L ${DATA_DIR} ] && [ ! -e ${DATA_DIR} ]; then
   mkdir -p $(readlink -f $DATA_DIR)
@@ -38,7 +39,7 @@ mkdir -p "${DATA_DIR}/storage_files"
 echo "Starting PRuntime with extra opts '${EXTRA_OPTS}'"
 if [ "$SGX" -eq 0 ]; then
   echo "PRuntime will running in software mode"
-  cd $WORK_DIR && pruntime --allow-cors $EXTRA_OPTS
+  cd $WORK_DIR && $GRAMINE_DIRECT_BIN pruntime --allow-cors $EXTRA_OPTS
 else
   echo "PRuntime will running in hardware mode"
   cd $WORK_DIR && $GRAMINE_SGX_BIN pruntime --allow-cors $EXTRA_OPTS

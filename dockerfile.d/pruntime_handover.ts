@@ -64,7 +64,7 @@ const exists = async (filename: string): Promise<boolean> => {
 
 const currentPath = await Deno.realPath("/opt/pruntime/releases/current");
 const version = currentPath.split("/").pop();
-console.log(currentPath)
+console.log(`Current ${currentPath}`)
 
 // Check current (the image contains) has initialized
 if (await exists(path.join(currentPath, "data/protected_files/runtime-data.seal"))) {
@@ -73,16 +73,19 @@ if (await exists(path.join(currentPath, "data/protected_files/runtime-data.seal"
 }
 
 // TODO: descending sort folders and find the latest handoverable pruntime
-let previousPath: string | undefined = undefined;
+let previousVersion: number | undefined = undefined;
 for await (const dirEntry of Deno.readDir('/opt/pruntime/backups')) {
   // console.log(dirEntry);
 
   // TODO: check handoverable (initialized && synced && version). Q: how to deal with not synced?
   // TODO: if handoverable is equal to current, should exit
-  previousPath = `/opt/pruntime/backups/${dirEntry.name}`;
+  const version = parseInt(dirEntry.name);
+  if (!previousVersion || previousVersion < version) {
+    previousVersion = version;
+  }
 }
 
-if (previousPath === undefined) {
+if (previousVersion === undefined) {
   console.log("No previous version, no need to handover!");
 
   // Copy current to backups
@@ -91,13 +94,13 @@ if (previousPath === undefined) {
   Deno.exit(0);
 }
 
-const previousVersion = previousPath.split("/").pop();
-console.log(previousPath);
-
 if (version == previousVersion) {
   console.log("same version, no need to handover")
   Deno.exit(0);
 }
+
+const previousPath = `/opt/pruntime/backups/${previousVersion}`;
+console.log(`Previous ${previousPath}`);
 
 console.log("starting");
 try { Deno.removeSync("/tmp/pruntime.log") } catch (_err) {}
