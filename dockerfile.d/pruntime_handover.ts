@@ -63,7 +63,7 @@ const exists = async (filename: string): Promise<boolean> => {
 };
 
 const currentPath = await Deno.realPath("/opt/pruntime/releases/current");
-const version = currentPath.split("/").pop();
+const currentVersion = currentPath.split("/").pop();
 console.log(`Current ${currentPath}`)
 
 // Check current (the image contains) has initialized
@@ -78,9 +78,15 @@ for await (const dirEntry of Deno.readDir('/opt/pruntime/backups')) {
   // console.log(dirEntry);
 
   // TODO: check handoverable (initialized && synced && version). Q: how to deal with not synced?
-  // TODO: if handoverable is equal to current, should exit
   const version = parseInt(dirEntry.name);
   if (!previousVersion || previousVersion < version) {
+    if (version >= currentVersion) {
+      continue;
+    } else if (!await exists(`/opt/pruntime/backups/${version}/data/protected_files/runtime-data.seal`)) {
+      console.log(`no runtime-data.seal found in ${version}, skip`)
+      continue
+    }
+    
     previousVersion = version;
   }
 }
@@ -89,12 +95,12 @@ if (previousVersion === undefined) {
   console.log("No previous version, no need to handover!");
 
   // Copy current to backups
-  try { copySync(currentPath, `/opt/pruntime/backups/${version}`) } catch (err) { console.error(err.message) }
+  try { copySync(currentPath, `/opt/pruntime/backups/${currentVersion}`) } catch (err) { console.error(err.message) }
 
   Deno.exit(0);
 }
 
-if (version == previousVersion) {
+if (currentVersion == previousVersion) {
   console.log("same version, no need to handover")
   Deno.exit(0);
 }
@@ -140,6 +146,6 @@ try { Deno.removeSync(storagePath) } catch (err) { console.error(err.message) }
 try { copySync(previousStoragePath, storagePath) } catch (err) { console.error(err.message) }
 
 // Copy current to backups
-try { copySync(currentPath, `/opt/pruntime/backups/${version}`) } catch (err) { console.error(err.message) }
+try { copySync(currentPath, `/opt/pruntime/backups/${currentVersion}`) } catch (err) { console.error(err.message) }
 
 Deno.exit(0);
