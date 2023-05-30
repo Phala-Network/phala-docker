@@ -9,6 +9,8 @@ ENV PATH="$DENO_INSTALL/bin:$PATH"
 ADD dockerfile.d/start_pruntime_with_handover.sh /opt/pruntime/start_pruntime_with_handover.sh
 ADD dockerfile.d/pruntime_handover.ts /opt/pruntime/pruntime_handover.ts
 
+RUN deno cache --reload /opt/pruntime/pruntime_handover.ts 
+
 WORKDIR /opt/pruntime/releases/current
 
 ARG PRUNTIME_VERSION="master"
