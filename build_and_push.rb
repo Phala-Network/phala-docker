@@ -27,10 +27,6 @@ PROUTER_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-prouter"
 PROUTER_DOCKER_TAG = COMMON_TAG
 PROUTER_GIT_TAG = GIT_TAG
 
-PINK_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-pink-builder"
-PINK_DOCKER_TAG = "1.1" # COMMON_TAG
-PINK_GIT_TAG = GIT_TAG
-
 PRUNTIME_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-pruntime-v2"
 PRUNTIME_DOCKER_TAG = COMMON_TAG
 PRUNTIME_GIT_TAG = GIT_TAG
@@ -101,30 +97,6 @@ end
 #     [
 #       "docker push #{registry}/#{PRUNTIME_DOCKER_REPO}:#{PRUNTIME_DOCKER_TAG}",
 #       "docker push #{registry}/#{PRUNTIME_DOCKER_REPO}"
-#     ].each do |cmd|
-#       puts cmd
-#       run cmd
-#     end
-#   end
-# end
-
-# # Build PInk
-# REGISTRIES.each do |registry|
-#   [
-#     "docker build --build-arg PHALA_GIT_TAG=#{PINK_GIT_TAG} -f pink.Dockerfile -t #{registry}/#{PINK_DOCKER_REPO}:#{PINK_DOCKER_TAG} .",
-#     "docker build --build-arg PHALA_GIT_TAG=#{PINK_GIT_TAG} -f pink.Dockerfile -t #{registry}/#{PINK_DOCKER_REPO} ."
-#   ].each do |cmd|
-#     puts cmd
-#     run cmd
-#   end
-# end
-
-# unless BUILD_ONLY
-#   # Push PInk
-#   REGISTRIES.each do |registry|
-#     [
-#       "docker push #{registry}/#{PINK_DOCKER_REPO}:#{PINK_DOCKER_TAG}",
-#       "docker push #{registry}/#{PINK_DOCKER_REPO}"
 #     ].each do |cmd|
 #       puts cmd
 #       run cmd
