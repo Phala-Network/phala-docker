@@ -61,13 +61,9 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y rsync unzip lsb-release 
 
 ARG PHALA_CARGO_PROFILE="release"
 
-ARG PRUNTIME_VERSION="${PHALA_GIT_TAG}"
-ARG PRUNTIME_DIR="/opt/pruntime/releases/${PRUNTIME_VERSION}"
-ARG PRUNTIME_DATA_DIR="data" # "${PRUNTIME_DIR}/data"
-
 RUN cd $HOME/phala-blockchain/standalone/pruntime/gramine-build && \
-    PATH="$PATH:$HOME/.cargo/bin" make pre-dist PREFER_PREBUILT_PINK_LIBS=0 PREFIX="${PRUNTIME_DIR}"
+    PATH="$PATH:$HOME/.cargo/bin" make pre-dist PREFER_PREBUILT_PINK_LIBS=0"
 
-WORKDIR $HOME/phala-blockchain/standalone/pruntime
+WORKDIR /root/phala-blockchain/standalone/pruntime/bin
 
 ENTRYPOINT ["/bin/bash"]
