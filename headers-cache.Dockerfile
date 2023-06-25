@@ -42,7 +42,7 @@ RUN DEBIAN_FRONTEND='noninteractive' apt-get update && \
     DEBIAN_FRONTEND='noninteractive' apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates git tini
 
 RUN mkdir -p /opt/headers-cache/data
-COPY --from=builder /root/headers-cache /opt/headers-cache
+COPY --from=builder /root/headers-cache /opt/headers-cache/headers-cache
 
 ENV RUST_LOG="info"
 
