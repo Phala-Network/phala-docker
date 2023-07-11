@@ -59,6 +59,7 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get update && \
 RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y rsync unzip lsb-release debhelper gettext cmake reprepro autoconf automake bison build-essential curl dpkg-dev expect flex gcc gdb git git-core gnupg kmod libboost-system-dev libboost-thread-dev libcurl4-openssl-dev libiptcdata0-dev libjsoncpp-dev liblog4cpp5-dev libprotobuf-dev libssl-dev libtool libxml2-dev uuid-dev ocaml ocamlbuild pkg-config protobuf-compiler gawk nasm ninja-build python3 python3-pip python3-click python3-jinja2 texinfo llvm clang libclang-dev && \
     DEBIAN_FRONTEND="noninteractive" apt-get clean -y
 
+ARG PREBUILT_PINK_RUNTIMES_PROFILE="production"
 ARG PHALA_CARGO_PROFILE="release"
 ARG RA_METHOD="epid"
 ARG IAS_SPID=""
@@ -73,7 +74,7 @@ ARG PRUNTIME_DATA_DIR="data" # "${PRUNTIME_DIR}/data"
 COPY priv.build_stage .priv
 
 RUN cd $HOME/phala-blockchain/standalone/pruntime/gramine-build && \
-    PATH="$PATH:$HOME/.cargo/bin" make dist PREFER_PREBUILT_PINK_LIBS=1 PREFIX="${PRUNTIME_DIR}" && \
+    PATH="$PATH:$HOME/.cargo/bin" make dist PREFER_PREBUILT_PINK_LIBS=1 PREFIX="${PRUNTIME_DIR}" BUILD="${PHALA_CARGO_PROFILE}"  && \
     PATH="$PATH:$HOME/.cargo/bin" make clean && \
     rm -rf $HOME/.priv/*
 

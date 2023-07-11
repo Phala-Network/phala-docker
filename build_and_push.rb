@@ -5,7 +5,7 @@ BUILD_ONLY = false
 GIT_TAG = "master"
 
 COMMON_CHAIN_NAME = "phala"
-COMMON_TAG = "23041501"
+COMMON_TAG = "23062301"
 
 NODE_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-node"
 NODE_DOCKER_TAG = COMMON_TAG
@@ -158,7 +158,6 @@ unless BUILD_ONLY
     end
   end
 end
-
 
 # # Build PRouter
 # REGISTRIES.each do |registry|

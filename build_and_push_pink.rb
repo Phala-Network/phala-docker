@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 BUILD_ONLY = false
-GIT_TAG = "refactor-pruntime-build" # "master"
+GIT_TAG = "master"
 
 COMMON_CHAIN_NAME = "phala"
 # COMMON_TAG = "23041501"

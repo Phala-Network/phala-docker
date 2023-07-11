@@ -1,7 +1,7 @@
 FROM --platform=linux/amd64 ubuntu:22.04
 
 ARG TZ="Etc/UTC"
-ARG RUST_TOOLCHAIN="stable"
+ARG RUST_TOOLCHAIN="1.69.0"
 ARG PHALA_GIT_REPO="https://github.com/Phala-Network/phala-blockchain.git"
 ARG PHALA_GIT_TAG="master"
 
@@ -60,9 +60,10 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get install -y rsync unzip lsb-release 
     DEBIAN_FRONTEND="noninteractive" apt-get clean -y
 
 ARG PHALA_CARGO_PROFILE="release"
+ARG PREBUILT_PINK_RUNTIMES_PROFILE="production"
 
 RUN cd $HOME/phala-blockchain/standalone/pruntime/gramine-build && \
-    PATH="$PATH:$HOME/.cargo/bin" make pre-dist PREFER_PREBUILT_PINK_LIBS=0"
+    PATH="$PATH:$HOME/.cargo/bin" make pre-dist PREFER_PREBUILT_PINK_LIBS=0 BUILD="${PHALA_CARGO_PROFILE}"
 
 WORKDIR /root/phala-blockchain/standalone/pruntime/bin
 
