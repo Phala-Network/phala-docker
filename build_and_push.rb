@@ -2,10 +2,10 @@
 # frozen_string_literal: true
 
 BUILD_ONLY = false
-GIT_TAG = "master"
+GIT_TAG = "testing/safe-handover-2"
 
 COMMON_CHAIN_NAME = "phala"
-COMMON_TAG = "23062301"
+COMMON_TAG = "23081601-2"
 
 NODE_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-node"
 NODE_DOCKER_TAG = COMMON_TAG
@@ -22,6 +22,10 @@ HEADERS_CACHE_GIT_TAG = GIT_TAG
 REPLAY_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-replay"
 REPLAY_DOCKER_TAG = COMMON_TAG
 REPLAY_GIT_TAG = GIT_TAG
+
+PRB_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-prb"
+PRB_DOCKER_TAG = COMMON_TAG
+PRB_GIT_TAG = GIT_TAG
 
 PROUTER_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-prouter"
 PROUTER_DOCKER_TAG = COMMON_TAG
@@ -272,6 +276,30 @@ end
 #     [
 #       "docker push #{registry}/#{REPLAY_DOCKER_REPO}:#{REPLAY_DOCKER_TAG}",
 #       "docker push #{registry}/#{REPLAY_DOCKER_REPO}"
+#     ].each do |cmd|
+#       puts cmd
+#       run cmd
+#     end
+#   end
+# end
+
+# # Build PRB
+# REGISTRIES.each do |registry|
+#   [
+#     "docker build --build-arg PHALA_GIT_TAG=#{PRB_GIT_TAG} -f prb.Dockerfile -t #{registry}/#{PRB_DOCKER_REPO}:#{PRB_DOCKER_TAG} .",
+#     "docker build --build-arg PHALA_GIT_TAG=#{PRB_GIT_TAG} -f prb.Dockerfile -t #{registry}/#{PRB_DOCKER_REPO} ."
+#   ].each do |cmd|
+#     puts cmd
+#     run cmd
+#   end
+# end
+
+# unless BUILD_ONLY
+#   # Push PRB
+#   REGISTRIES.each do |registry|
+#     [
+#       "docker push #{registry}/#{PRB_DOCKER_REPO}:#{PRB_DOCKER_TAG}",
+#       "docker push #{registry}/#{PRB_DOCKER_REPO}"
 #     ].each do |cmd|
 #       puts cmd
 #       run cmd
