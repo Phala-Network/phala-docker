@@ -120,7 +120,7 @@ console.log("started");
 const command = new Deno.Command(`/opt/pruntime/releases/current/gramine-sgx`, {
   args: [
     "pruntime",
-    "--request-handover-from http://localhost:1888",
+    "--request-handover-from=http://localhost:1888",
   ],
   cwd: "/opt/pruntime/releases/current"
 });
