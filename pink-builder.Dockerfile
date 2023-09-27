@@ -1,7 +1,7 @@
 FROM --platform=linux/amd64 ubuntu:22.04
 
 ARG TZ="Etc/UTC"
-ARG RUST_TOOLCHAIN="1.69.0"
+ARG RUST_TOOLCHAIN="1.72.0"
 ARG PHALA_GIT_REPO="https://github.com/Phala-Network/phala-blockchain.git"
 ARG PHALA_GIT_TAG="master"
 
