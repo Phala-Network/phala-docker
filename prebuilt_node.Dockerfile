@@ -1,13 +1,11 @@
-FROM ubuntu:20.04
-
-ARG DEBIAN_FRONTEND='noninteractive'
-
-WORKDIR /root
+FROM ubuntu:22.04
 
 RUN apt-get update && \
-    apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates tini
+    DEBIAN_FRONTEND='noninteractive' apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates tini
 
-ADD prebuilt/node/* .
+ADD prebuilt/node/* /root
+
+WORKDIR /root
 
 ENV RUST_LOG="info"
 ENV NODE_NAME='phala-node'

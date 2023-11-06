@@ -41,22 +41,17 @@ RUN DEBIAN_FRONTEND='noninteractive' apt-get update && \
     DEBIAN_FRONTEND='noninteractive' apt-get upgrade -y && \
     DEBIAN_FRONTEND='noninteractive' apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates git unzip tini
 
-COPY --from=builder /root/phala-node /root
-ADD dockerfile.d/start_node.sh /root/start_node.sh
+COPY --from=builder /root/replay .
+ADD dockerfile.d/start_replay.sh ./start_replay.sh
+RUN mkdir /root/data
 
 WORKDIR /root
 
 ENV RUST_LOG="info"
-ENV CHAIN="phala"
-ENV NODE_NAME='phala-node'
-ENV NODE_ROLE="FULL"
 ENV EXTRA_OPTS=''
 
-EXPOSE 9615
-EXPOSE 9933
-EXPOSE 9944
-EXPOSE 30333
+EXPOSE 8080
 
 ENTRYPOINT ["/usr/bin/tini", "--"]
 
-CMD ["/bin/bash", "./start_node.sh"]
+CMD ["/bin/bash", "./start_replay.sh"]

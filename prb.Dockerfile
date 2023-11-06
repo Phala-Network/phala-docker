@@ -27,6 +27,8 @@ RUN cd $HOME/phala-blockchain && \
     cp ./target/$PHALA_CARGO_PROFILE/pherry /root && \
     cp ./target/$PHALA_CARGO_PROFILE/headers-cache /root && \
     cp ./target/$PHALA_CARGO_PROFILE/replay /root && \
+    cp ./target/$PHALA_CARGO_PROFILE/prb-wm /root && \
+    cp ./target/$PHALA_CARGO_PROFILE/prb-config /root && \
     PATH="$HOME/.cargo/bin:$PATH" cargo clean && \
     rm -rf /root/.cargo/registry && \
     rm -rf /root/.cargo/git
@@ -39,24 +41,17 @@ ARG TZ='Etc/UTC'
 
 RUN DEBIAN_FRONTEND='noninteractive' apt-get update && \
     DEBIAN_FRONTEND='noninteractive' apt-get upgrade -y && \
-    DEBIAN_FRONTEND='noninteractive' apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates git unzip tini
+    DEBIAN_FRONTEND='noninteractive' apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates git tini
 
-COPY --from=builder /root/phala-node /root
-ADD dockerfile.d/start_node.sh /root/start_node.sh
+RUN mkdir -p /opt/headers-cache/data
+COPY --from=builder /root/headers-cache /opt/headers-cache/headers-cache
 
-WORKDIR /root
+RUN mkdir -p /opt/prb/data
+COPY --from=builder /root/prb-wm /opt/prb/prb-wm
+COPY --from=builder /root/prb-config /opt/prb/prb-config
 
 ENV RUST_LOG="info"
-ENV CHAIN="phala"
-ENV NODE_NAME='phala-node'
-ENV NODE_ROLE="FULL"
-ENV EXTRA_OPTS=''
 
-EXPOSE 9615
-EXPOSE 9933
-EXPOSE 9944
-EXPOSE 30333
+WORKDIR /opt/prb/data
 
-ENTRYPOINT ["/usr/bin/tini", "--"]
-
-CMD ["/bin/bash", "./start_node.sh"]
+ENTRYPOINT /opt/prb/prb-wm

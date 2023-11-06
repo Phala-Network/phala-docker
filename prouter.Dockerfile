@@ -16,17 +16,14 @@ RUN curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y --de
 
 RUN git clone --depth 1 --recurse-submodules --shallow-submodules -j 8 -b ${PHALA_GIT_TAG} ${PHALA_GIT_REPO} phala-blockchain
 
-RUN cd $HOME/phala-blockchain && \
+RUN cd $HOME/phala-blockchain/standalone/prouter && \
     PATH="$HOME/.cargo/bin:$PATH" cargo fetch
 
 ARG PHALA_CARGO_PROFILE='release'
 
-RUN cd $HOME/phala-blockchain && \
+RUN cd $HOME/phala-blockchain/standalone/prouter && \
     PATH="$HOME/.cargo/bin:$PATH" cargo build --profile $PHALA_CARGO_PROFILE && \
-    cp ./target/$PHALA_CARGO_PROFILE/phala-node /root && \
-    cp ./target/$PHALA_CARGO_PROFILE/pherry /root && \
-    cp ./target/$PHALA_CARGO_PROFILE/headers-cache /root && \
-    cp ./target/$PHALA_CARGO_PROFILE/replay /root && \
+    cp ./target/$PHALA_CARGO_PROFILE/prouter /root && \
     PATH="$HOME/.cargo/bin:$PATH" cargo clean && \
     rm -rf /root/.cargo/registry && \
     rm -rf /root/.cargo/git
@@ -41,22 +38,11 @@ RUN DEBIAN_FRONTEND='noninteractive' apt-get update && \
     DEBIAN_FRONTEND='noninteractive' apt-get upgrade -y && \
     DEBIAN_FRONTEND='noninteractive' apt-get install -y apt-utils apt-transport-https software-properties-common readline-common curl vim wget gnupg gnupg2 gnupg-agent ca-certificates git unzip tini
 
-COPY --from=builder /root/phala-node /root
-ADD dockerfile.d/start_node.sh /root/start_node.sh
-
-WORKDIR /root
+RUN mkdir -p /opt/prouter/data
+COPY --from=builder /root/prouter /opt/prouter
 
 ENV RUST_LOG="info"
-ENV CHAIN="phala"
-ENV NODE_NAME='phala-node'
-ENV NODE_ROLE="FULL"
-ENV EXTRA_OPTS=''
 
-EXPOSE 9615
-EXPOSE 9933
-EXPOSE 9944
-EXPOSE 30333
+WORKDIR /opt/prouter/data
 
-ENTRYPOINT ["/usr/bin/tini", "--"]
-
-CMD ["/bin/bash", "./start_node.sh"]
+ENTRYPOINT ["/usr/bin/tini", "--", "/opt/prouter/prouter"]
