@@ -47,6 +47,11 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get update && \
         libsgx-ra-network \
         libsgx-ra-uefi \
         libsgx-dcap-default-qpl \
+        libsgx-dcap-default-qpl-dev \
+        libsgx-dcap-quote-verify \
+        libsgx-dcap-quote-verify-dev \
+        libsgx-dcap-ql \
+        libsgx-dcap-ql-dev \
         sgx-aesm-service \
         gramine && \
     apt-get clean -y
@@ -122,6 +127,8 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get update && \
         libsgx-ra-network \
         libsgx-ra-uefi \
         libsgx-dcap-default-qpl \
+        libsgx-dcap-quote-verify \
+        libsgx-dcap-ql \
         sgx-aesm-service \
         gramine && \
     DEBIAN_FRONTEND="noninteractive" apt-get clean -y

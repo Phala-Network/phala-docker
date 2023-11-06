@@ -36,6 +36,8 @@ RUN apt-get update && \
         libsgx-ra-network \
         libsgx-ra-uefi \
         libsgx-dcap-default-qpl \
+        libsgx-dcap-quote-verify \
+        libsgx-dcap-ql \
         sgx-aesm-service \
         gramine && \
     apt-get clean -y
