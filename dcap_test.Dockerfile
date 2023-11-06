@@ -145,4 +145,4 @@ ENV RUST_LOG="info"
 
 ENTRYPOINT ["/usr/bin/tini", "--"]
 
-CMD ["/bin/bash", "${APP_DEPLOYMENT_DIR}/start_dcap_test.sh"]
+CMD ["/bin/bash", "start_dcap_test.sh"]
