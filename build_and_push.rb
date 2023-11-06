@@ -2,10 +2,10 @@
 # frozen_string_literal: true
 
 BUILD_ONLY = false
-GIT_TAG = "testing/safe-handover-2"
+GIT_TAG = "master"
 
 COMMON_CHAIN_NAME = "phala"
-COMMON_TAG = "23081601-2"
+COMMON_TAG = "23110601"
 
 NODE_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-node"
 NODE_DOCKER_TAG = COMMON_TAG
@@ -109,6 +109,7 @@ end
 # end
 
 # Build Phala-pRuntime
+
 SGX_SIGNER_KEY = "Enclave_private.prod.decrypted.pem"
 IAS_SPID = ENV.fetch("IAS_SPID")
 IAS_API_KEY = ENV.fetch("IAS_API_KEY")

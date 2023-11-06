@@ -1,7 +1,7 @@
 FROM --platform=linux/amd64 ubuntu:22.04 AS builder
 
 ARG TZ="Etc/UTC"
-ARG RUST_TOOLCHAIN="1.72.0"
+ARG RUST_TOOLCHAIN="1.73.0"
 ARG PHALA_GIT_REPO="https://github.com/Phala-Network/phala-blockchain.git"
 ARG PHALA_GIT_TAG="master"
 
@@ -140,6 +140,8 @@ RUN ln -s ${PRUNTIME_DIR} /opt/pruntime/releases/current
 RUN mkdir -p ${REAL_PRUNTIME_DATA_DIR}
 RUN rm -rf ${PRUNTIME_DIR}/data
 RUN ln -s ${REAL_PRUNTIME_DATA_DIR} ${PRUNTIME_DIR}/data
+
+ADD dockerfile.d/conf /opt/conf
 
 WORKDIR /opt/pruntime/releases/current
 
