@@ -127,7 +127,7 @@ RUN DEBIAN_FRONTEND="noninteractive" apt-get update && \
         gramine && \
     DEBIAN_FRONTEND="noninteractive" apt-get clean -y
 
-RUN sudo usermod -aG sgx,sgx_prv $USER
+RUN usermod -aG sgx,sgx_prv $USER
 
 COPY --from=builder /root/.cargo/bin/sgx-detect /usr/local/bin
 
