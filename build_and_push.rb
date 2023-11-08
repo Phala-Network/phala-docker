@@ -136,6 +136,7 @@ end
 SGX_SIGNER_KEY = "Enclave_private.prod.decrypted.pem"
 IAS_SPID = ENV.fetch("IAS_SPID")
 IAS_API_KEY = ENV.fetch("IAS_API_KEY")
+IAS_LINKABLE = ENV.fetch("IAS_LINKABLE")
 IAS_ENV = "PROD"
 RA_TYPE = "epid"
 PRUNTIME_VERSION = ENV.fetch("PRUNTIME_VERSION", PRUNTIME_DOCKER_TAG)
@@ -143,8 +144,8 @@ REAL_PRUNTIME_DATA_DIR = "/opt/pruntime/data/#{PRUNTIME_VERSION}"
 
 REGISTRIES.each do |registry|
   [
-    "docker build --build-arg PHALA_GIT_TAG=#{PRUNTIME_GIT_TAG} --build-arg SGX_SIGNER_KEY=/root/.priv/#{SGX_SIGNER_KEY} --build-arg IAS_SPID=#{IAS_SPID} --build-arg IAS_API_KEY=#{IAS_API_KEY} --build-arg IAS_ENV=#{IAS_ENV} --build-arg RA_TYPE=#{RA_TYPE} --build-arg PRUNTIME_VERSION=#{PRUNTIME_VERSION} --build-arg REAL_PRUNTIME_DATA_DIR=#{REAL_PRUNTIME_DATA_DIR} -f pruntime.Dockerfile -t #{registry}/#{PRUNTIME_DOCKER_REPO}:#{PRUNTIME_DOCKER_TAG} .",
-    "docker build --build-arg PHALA_GIT_TAG=#{PRUNTIME_GIT_TAG} --build-arg SGX_SIGNER_KEY=/root/.priv/#{SGX_SIGNER_KEY} --build-arg IAS_SPID=#{IAS_SPID} --build-arg IAS_API_KEY=#{IAS_API_KEY} --build-arg IAS_ENV=#{IAS_ENV} --build-arg RA_TYPE=#{RA_TYPE} --build-arg PRUNTIME_VERSION=#{PRUNTIME_VERSION} --build-arg REAL_PRUNTIME_DATA_DIR=#{REAL_PRUNTIME_DATA_DIR} -f pruntime.Dockerfile -t #{registry}/#{PRUNTIME_DOCKER_REPO} ."
+    "docker build --build-arg PHALA_GIT_TAG=#{PRUNTIME_GIT_TAG} --build-arg SGX_SIGNER_KEY=/root/.priv/#{SGX_SIGNER_KEY} --build-arg IAS_SPID=#{IAS_SPID} --build-arg IAS_LINKABLE=#{IAS_LINKABLE} --build-arg IAS_API_KEY=#{IAS_API_KEY} --build-arg IAS_ENV=#{IAS_ENV} --build-arg RA_TYPE=#{RA_TYPE} --build-arg PRUNTIME_VERSION=#{PRUNTIME_VERSION} --build-arg REAL_PRUNTIME_DATA_DIR=#{REAL_PRUNTIME_DATA_DIR} -f pruntime.Dockerfile -t #{registry}/#{PRUNTIME_DOCKER_REPO}:#{PRUNTIME_DOCKER_TAG} .",
+    "docker build --build-arg PHALA_GIT_TAG=#{PRUNTIME_GIT_TAG} --build-arg SGX_SIGNER_KEY=/root/.priv/#{SGX_SIGNER_KEY} --build-arg IAS_SPID=#{IAS_SPID} --build-arg IAS_LINKABLE=#{IAS_LINKABLE} --build-arg IAS_API_KEY=#{IAS_API_KEY} --build-arg IAS_ENV=#{IAS_ENV} --build-arg RA_TYPE=#{RA_TYPE} --build-arg PRUNTIME_VERSION=#{PRUNTIME_VERSION} --build-arg REAL_PRUNTIME_DATA_DIR=#{REAL_PRUNTIME_DATA_DIR} -f pruntime.Dockerfile -t #{registry}/#{PRUNTIME_DOCKER_REPO} ."
   ].each do |cmd|
     puts cmd
     run cmd
