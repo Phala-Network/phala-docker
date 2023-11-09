@@ -66,10 +66,11 @@ RUN cd $HOME/phala-blockchain/standalone/pruntime && \
 
 ARG PREBUILT_PINK_RUNTIMES_PROFILE="production"
 ARG PHALA_CARGO_PROFILE="release"
-ARG RA_METHOD="epid"
+ARG RA_TYPE="epid"
 ARG IAS_SPID=""
 ARG IAS_API_KEY=""
 ARG IAS_ENV="DEV"
+ARG IAS_LINKABLE="1"
 ARG SGX_SIGNER_KEY="private.dev.pem"
 
 ARG PRUNTIME_VERSION="${PHALA_GIT_TAG}"

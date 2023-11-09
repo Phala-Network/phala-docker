@@ -5,38 +5,38 @@ BUILD_ONLY = false
 GIT_TAG = "master"
 
 COMMON_CHAIN_NAME = "phala"
-COMMON_TAG = "23110701"
+COMMON_TAG = "23111001"
 
-NODE_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-node"
-NODE_DOCKER_TAG = COMMON_TAG
 NODE_GIT_TAG = GIT_TAG
+NODE_DOCKER_TAG = COMMON_TAG
+NODE_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-node"
 
-PHERRY_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-pherry"
-PHERRY_DOCKER_TAG = COMMON_TAG
 PHERRY_GIT_TAG = GIT_TAG
+PHERRY_DOCKER_TAG = COMMON_TAG
+PHERRY_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-pherry"
 
-HEADERS_CACHE_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-headers-cache"
-HEADERS_CACHE_DOCKER_TAG = COMMON_TAG
 HEADERS_CACHE_GIT_TAG = GIT_TAG
+HEADERS_CACHE_DOCKER_TAG = COMMON_TAG
+HEADERS_CACHE_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-headers-cache"
 
-REPLAY_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-replay"
-REPLAY_DOCKER_TAG = COMMON_TAG
 REPLAY_GIT_TAG = GIT_TAG
+REPLAY_DOCKER_TAG = COMMON_TAG
+REPLAY_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-replay"
 
-PRB_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-prb"
-PRB_DOCKER_TAG = COMMON_TAG
 PRB_GIT_TAG = GIT_TAG
+PRB_DOCKER_TAG = COMMON_TAG
+PRB_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-prb"
 
-PROUTER_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-prouter"
-PROUTER_DOCKER_TAG = COMMON_TAG
 PROUTER_GIT_TAG = GIT_TAG
+PROUTER_DOCKER_TAG = COMMON_TAG
+PROUTER_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-prouter"
 
-PRUNTIME_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-pruntime-v2"
-PRUNTIME_DOCKER_TAG = COMMON_TAG
 PRUNTIME_GIT_TAG = GIT_TAG
-
-PRUNTIME_WITH_HANDOVER_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-pruntime-v2-with-handover"
-PRUNTIME_WITH_HANDOVER_DOCKER_TAG = PRUNTIME_DOCKER_TAG
+PRUNTIME_DOCKER_TAG = COMMON_TAG
+PRUNTIME_EPID_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-pruntime-v2"
+PRUNTIME_EPID_WITH_HANDOVER_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-pruntime-v2-with-handover"
+PRUNTIME_DCAP_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-pruntime-v2-dcap"
+PRUNTIME_DCAP_WITH_HANDOVER_DOCKER_REPO = "#{COMMON_CHAIN_NAME}-pruntime-v2-dcap-with-handover"
 
 SGX_DETECT_DOCKER_REPO = "phala-sgx_detect"
 
@@ -86,29 +86,29 @@ end
 #   end
 # end
 
-# Build DCAP test
-REGISTRIES.each do |registry|
-  [
-    "docker build -f dcap_test.Dockerfile -t #{registry}/#{DCAP_TEST_DOCKER_REPO} ."
-  ].each do |cmd|
-    puts cmd
-    run cmd
-  end
-end
+# # Build DCAP test
+# REGISTRIES.each do |registry|
+#   [
+#     "docker build -f dcap_test.Dockerfile -t #{registry}/#{DCAP_TEST_DOCKER_REPO} ."
+#   ].each do |cmd|
+#     puts cmd
+#     run cmd
+#   end
+# end
 
-unless BUILD_ONLY
-  # Push DCAP test
-  REGISTRIES.each do |registry|
-    [
-      "docker push #{registry}/#{DCAP_TEST_DOCKER_REPO}"
-    ].each do |cmd|
-      puts cmd
-      run cmd
-    end
-  end
-end
+# unless BUILD_ONLY
+#   # Push DCAP test
+#   REGISTRIES.each do |registry|
+#     [
+#       "docker push #{registry}/#{DCAP_TEST_DOCKER_REPO}"
+#     ].each do |cmd|
+#       puts cmd
+#       run cmd
+#     end
+#   end
+# end
 
-# # Build Prebuilt Phala-pRuntime
+# # Build prebuilt pRuntime
 # REGISTRIES.each do |registry|
 #   [
 #     "docker build -f prebuilt_pruntime.Dockerfile -t #{registry}/#{PRUNTIME_DOCKER_REPO}:#{PRUNTIME_DOCKER_TAG} .",
@@ -120,7 +120,7 @@ end
 # end
 
 # unless BUILD_ONLY
-#   # Push Phala-pRuntime
+#   # Push prebuilt pRuntime
 #   REGISTRIES.each do |registry|
 #     [
 #       "docker push #{registry}/#{PRUNTIME_DOCKER_REPO}:#{PRUNTIME_DOCKER_TAG}",
@@ -132,20 +132,20 @@ end
 #   end
 # end
 
-# Build Phala-pRuntime
+# Build pRuntime variants
 SGX_SIGNER_KEY = "Enclave_private.prod.decrypted.pem"
 IAS_SPID = ENV.fetch("IAS_SPID")
 IAS_API_KEY = ENV.fetch("IAS_API_KEY")
 IAS_LINKABLE = ENV.fetch("IAS_LINKABLE")
 IAS_ENV = "PROD"
-RA_TYPE = "epid"
 PRUNTIME_VERSION = ENV.fetch("PRUNTIME_VERSION", PRUNTIME_DOCKER_TAG)
 REAL_PRUNTIME_DATA_DIR = "/opt/pruntime/data/#{PRUNTIME_VERSION}"
 
+# Build pRuntime EPID variant
 REGISTRIES.each do |registry|
   [
-    "docker build --build-arg PHALA_GIT_TAG=#{PRUNTIME_GIT_TAG} --build-arg SGX_SIGNER_KEY=/root/.priv/#{SGX_SIGNER_KEY} --build-arg IAS_SPID=#{IAS_SPID} --build-arg IAS_LINKABLE=#{IAS_LINKABLE} --build-arg IAS_API_KEY=#{IAS_API_KEY} --build-arg IAS_ENV=#{IAS_ENV} --build-arg RA_TYPE=#{RA_TYPE} --build-arg PRUNTIME_VERSION=#{PRUNTIME_VERSION} --build-arg REAL_PRUNTIME_DATA_DIR=#{REAL_PRUNTIME_DATA_DIR} -f pruntime.Dockerfile -t #{registry}/#{PRUNTIME_DOCKER_REPO}:#{PRUNTIME_DOCKER_TAG} .",
-    "docker build --build-arg PHALA_GIT_TAG=#{PRUNTIME_GIT_TAG} --build-arg SGX_SIGNER_KEY=/root/.priv/#{SGX_SIGNER_KEY} --build-arg IAS_SPID=#{IAS_SPID} --build-arg IAS_LINKABLE=#{IAS_LINKABLE} --build-arg IAS_API_KEY=#{IAS_API_KEY} --build-arg IAS_ENV=#{IAS_ENV} --build-arg RA_TYPE=#{RA_TYPE} --build-arg PRUNTIME_VERSION=#{PRUNTIME_VERSION} --build-arg REAL_PRUNTIME_DATA_DIR=#{REAL_PRUNTIME_DATA_DIR} -f pruntime.Dockerfile -t #{registry}/#{PRUNTIME_DOCKER_REPO} ."
+    "docker build --build-arg PHALA_GIT_TAG=#{PRUNTIME_GIT_TAG} --build-arg SGX_SIGNER_KEY=/root/.priv/#{SGX_SIGNER_KEY} --build-arg RA_TYPE=epid --build-arg IAS_SPID=#{IAS_SPID} --build-arg IAS_LINKABLE=#{IAS_LINKABLE} --build-arg IAS_API_KEY=#{IAS_API_KEY} --build-arg IAS_ENV=#{IAS_ENV} --build-arg PRUNTIME_VERSION=#{PRUNTIME_VERSION} --build-arg REAL_PRUNTIME_DATA_DIR=#{REAL_PRUNTIME_DATA_DIR} -f pruntime.Dockerfile -t #{registry}/#{PRUNTIME_EPID_DOCKER_REPO}:#{PRUNTIME_DOCKER_TAG} .",
+    "docker build --build-arg PHALA_GIT_TAG=#{PRUNTIME_GIT_TAG} --build-arg SGX_SIGNER_KEY=/root/.priv/#{SGX_SIGNER_KEY} --build-arg RA_TYPE=epid --build-arg IAS_SPID=#{IAS_SPID} --build-arg IAS_LINKABLE=#{IAS_LINKABLE} --build-arg IAS_API_KEY=#{IAS_API_KEY} --build-arg IAS_ENV=#{IAS_ENV} --build-arg PRUNTIME_VERSION=#{PRUNTIME_VERSION} --build-arg REAL_PRUNTIME_DATA_DIR=#{REAL_PRUNTIME_DATA_DIR} -f pruntime.Dockerfile -t #{registry}/#{PRUNTIME_EPID_DOCKER_REPO} ."
   ].each do |cmd|
     puts cmd
     run cmd
@@ -153,11 +153,11 @@ REGISTRIES.each do |registry|
 end
 
 unless BUILD_ONLY
-  # Push Phala-pRuntime
+  # Push pRuntime EPID variant
   REGISTRIES.each do |registry|
     [
-      "docker push #{registry}/#{PRUNTIME_DOCKER_REPO}:#{PRUNTIME_DOCKER_TAG}",
-      "docker push #{registry}/#{PRUNTIME_DOCKER_REPO}"
+      "docker push #{registry}/#{PRUNTIME_EPID_DOCKER_REPO}:#{PRUNTIME_DOCKER_TAG}",
+      "docker push #{registry}/#{PRUNTIME_EPID_DOCKER_REPO}"
     ].each do |cmd|
       puts cmd
       run cmd
@@ -165,10 +165,11 @@ unless BUILD_ONLY
   end
 end
 
+# Build pRuntime EPID variant with handover launcher
 REGISTRIES.each do |registry|
   [
-    "docker build --build-arg PRUNTIME_BASE_IMAGE=#{registry}/#{PRUNTIME_DOCKER_REPO}:#{PRUNTIME_DOCKER_TAG} --build-arg PRUNTIME_VERSION=#{PRUNTIME_VERSION} --build-arg REAL_PRUNTIME_DATA_DIR=#{REAL_PRUNTIME_DATA_DIR} -f pruntime-with-handover.Dockerfile -t #{registry}/#{PRUNTIME_WITH_HANDOVER_DOCKER_REPO}:#{PRUNTIME_WITH_HANDOVER_DOCKER_TAG} .",
-    "docker build --build-arg PRUNTIME_BASE_IMAGE=#{registry}/#{PRUNTIME_DOCKER_REPO}:#{PRUNTIME_DOCKER_TAG} --build-arg PRUNTIME_VERSION=#{PRUNTIME_VERSION} --build-arg REAL_PRUNTIME_DATA_DIR=#{REAL_PRUNTIME_DATA_DIR} -f pruntime-with-handover.Dockerfile -t #{registry}/#{PRUNTIME_WITH_HANDOVER_DOCKER_REPO} ."
+    "docker build --build-arg PRUNTIME_BASE_IMAGE=#{registry}/#{PRUNTIME_EPID_DOCKER_REPO}:#{PRUNTIME_DOCKER_TAG} --build-arg PRUNTIME_VERSION=#{PRUNTIME_VERSION} --build-arg REAL_PRUNTIME_DATA_DIR=#{REAL_PRUNTIME_DATA_DIR} -f pruntime-with-handover.Dockerfile -t #{registry}/#{PRUNTIME_EPID_WITH_HANDOVER_DOCKER_REPO}:#{PRUNTIME_DOCKER_TAG} .",
+    "docker build --build-arg PRUNTIME_BASE_IMAGE=#{registry}/#{PRUNTIME_EPID_DOCKER_REPO}:#{PRUNTIME_DOCKER_TAG} --build-arg PRUNTIME_VERSION=#{PRUNTIME_VERSION} --build-arg REAL_PRUNTIME_DATA_DIR=#{REAL_PRUNTIME_DATA_DIR} -f pruntime-with-handover.Dockerfile -t #{registry}/#{PRUNTIME_EPID_WITH_HANDOVER_DOCKER_REPO} ."
   ].each do |cmd|
     puts cmd
     run cmd
@@ -176,17 +177,66 @@ REGISTRIES.each do |registry|
 end
 
 unless BUILD_ONLY
-  # Push Phala-pRuntime
+  # Push pRuntime EPID variant with handover launcher
   REGISTRIES.each do |registry|
     [
-      "docker push #{registry}/#{PRUNTIME_WITH_HANDOVER_DOCKER_REPO}:#{PRUNTIME_WITH_HANDOVER_DOCKER_TAG}",
-      "docker push #{registry}/#{PRUNTIME_WITH_HANDOVER_DOCKER_REPO}"
+      "docker push #{registry}/#{PRUNTIME_EPID_WITH_HANDOVER_DOCKER_REPO}:#{PRUNTIME_DOCKER_TAG}",
+      "docker push #{registry}/#{PRUNTIME_EPID_WITH_HANDOVER_DOCKER_REPO}"
     ].each do |cmd|
       puts cmd
       run cmd
     end
   end
 end
+
+# Build pRuntime DCAP variant
+REGISTRIES.each do |registry|
+  [
+    "docker build --build-arg PHALA_GIT_TAG=#{PRUNTIME_GIT_TAG} --build-arg SGX_SIGNER_KEY=/root/.priv/#{SGX_SIGNER_KEY} --build-arg RA_TYPE=dcap --build-arg PRUNTIME_VERSION=#{PRUNTIME_VERSION} --build-arg REAL_PRUNTIME_DATA_DIR=#{REAL_PRUNTIME_DATA_DIR} -f pruntime.Dockerfile -t #{registry}/#{PRUNTIME_DCAP_DOCKER_REPO}:#{PRUNTIME_DOCKER_TAG} .",
+    "docker build --build-arg PHALA_GIT_TAG=#{PRUNTIME_GIT_TAG} --build-arg SGX_SIGNER_KEY=/root/.priv/#{SGX_SIGNER_KEY} --build-arg RA_TYPE=dcap --build-arg PRUNTIME_VERSION=#{PRUNTIME_VERSION} --build-arg REAL_PRUNTIME_DATA_DIR=#{REAL_PRUNTIME_DATA_DIR} -f pruntime.Dockerfile -t #{registry}/#{PRUNTIME_DCAP_DOCKER_REPO} ."
+  ].each do |cmd|
+    puts cmd
+    run cmd
+  end
+end
+
+unless BUILD_ONLY
+  # Push pRuntime DCAP variant
+  REGISTRIES.each do |registry|
+    [
+      "docker push #{registry}/#{PRUNTIME_DCAP_DOCKER_REPO}:#{PRUNTIME_DOCKER_TAG}",
+      "docker push #{registry}/#{PRUNTIME_DCAP_DOCKER_REPO}"
+    ].each do |cmd|
+      puts cmd
+      run cmd
+    end
+  end
+end
+
+# Note: handover for DCAP variant isn't support yet
+# # Build pRuntime DCAP variant with handover launcher
+# REGISTRIES.each do |registry|
+#   [
+#     "docker build --build-arg PRUNTIME_BASE_IMAGE=#{registry}/#{PRUNTIME_DCAP_DOCKER_REPO}:#{PRUNTIME_DOCKER_TAG} --build-arg PRUNTIME_VERSION=#{PRUNTIME_VERSION} --build-arg REAL_PRUNTIME_DATA_DIR=#{REAL_PRUNTIME_DATA_DIR} -f pruntime-with-handover.Dockerfile -t #{registry}/#{PRUNTIME_DCAP_WITH_HANDOVER_DOCKER_REPO}:#{PRUNTIME_DOCKER_TAG} .",
+#     "docker build --build-arg PRUNTIME_BASE_IMAGE=#{registry}/#{PRUNTIME_DCAP_DOCKER_REPO}:#{PRUNTIME_DOCKER_TAG} --build-arg PRUNTIME_VERSION=#{PRUNTIME_VERSION} --build-arg REAL_PRUNTIME_DATA_DIR=#{REAL_PRUNTIME_DATA_DIR} -f pruntime-with-handover.Dockerfile -t #{registry}/#{PRUNTIME_DCAP_WITH_HANDOVER_DOCKER_REPO} ."
+#   ].each do |cmd|
+#     puts cmd
+#     run cmd
+#   end
+# end
+
+# unless BUILD_ONLY
+#   # Push pRuntime DCAP variant with handover launcher
+#   REGISTRIES.each do |registry|
+#     [
+#       "docker push #{registry}/#{PRUNTIME_DCAP_WITH_HANDOVER_DOCKER_REPO}:#{PRUNTIME_DOCKER_TAG}",
+#       "docker push #{registry}/#{PRUNTIME_DCAP_WITH_HANDOVER_DOCKER_REPO}"
+#     ].each do |cmd|
+#       puts cmd
+#       run cmd
+#     end
+#   end
+# end
 
 # # Build PRouter
 # REGISTRIES.each do |registry|
