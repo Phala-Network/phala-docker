@@ -74,7 +74,7 @@ if (await exists(path.join(currentPath, "data/protected_files/runtime-data.seal"
 
 // TODO: descending sort folders and find the latest handoverable pruntime
 let previousVersion: number | undefined = undefined;
-for await (const dirEntry of Deno.readDir('/opt/pruntime/backups')) {
+for await (const dirEntry of Deno.readDir('/opt/pruntime/data')) {
   // console.log(dirEntry);
 
   // TODO: check handoverable (initialized && synced && version). Q: how to deal with not synced?
@@ -82,7 +82,7 @@ for await (const dirEntry of Deno.readDir('/opt/pruntime/backups')) {
   if (!previousVersion || previousVersion < version) {
     if (version >= currentVersion) {
       continue;
-    } else if (!await exists(`/opt/pruntime/backups/${version}/data/protected_files/runtime-data.seal`)) {
+    } else if (!await exists(`/opt/pruntime/data/${version}/protected_files/runtime-data.seal`)) {
       console.log(`no runtime-data.seal found in ${version}, skip`)
       continue
     }
@@ -93,10 +93,6 @@ for await (const dirEntry of Deno.readDir('/opt/pruntime/backups')) {
 
 if (previousVersion === undefined) {
   console.log("No previous version, no need to handover!");
-
-  // Copy current to backups
-  try { copySync(currentPath, `/opt/pruntime/backups/${currentVersion}`) } catch (err) { console.error(err.message) }
-
   Deno.exit(0);
 }
 
@@ -105,12 +101,12 @@ if (currentVersion == previousVersion) {
   Deno.exit(0);
 }
 
-const previousPath = `/opt/pruntime/backups/${previousVersion}`;
+const previousPath = `/opt/pruntime/releases/${previousVersion}`;
 console.log(`Previous ${previousPath}`);
 
 console.log("starting");
 try { Deno.removeSync("/tmp/pruntime.log") } catch (_err) {}
-let oldProcess = await startPRuntime(previousPath, "1888");
+let oldProcess = await startPRuntime(previousPath, "57718");
 await waitPRuntimeStarted("/tmp/pruntime.log");
 console.log("started");
 
@@ -120,15 +116,32 @@ console.log("started");
 const command = new Deno.Command(`/opt/pruntime/releases/current/gramine-sgx`, {
   args: [
     "pruntime",
-    "--request-handover-from=http://localhost:1888",
+    "--request-handover-from=http://localhost:57718",
   ],
   cwd: "/opt/pruntime/releases/current"
 });
 const { code, stdout, stderr } = command.outputSync();
 
+console.log("////////////////////////////////////////////////////////////////////////////////");
+console.log("// new handovered pRuntime exit code");
+console.log("////////////////////////////////////////////////////////////////////////////////");
+console.log();
 console.log(code);
+console.log();
+
+console.log("////////////////////////////////////////////////////////////////////////////////");
+console.log("// new handovered pRuntime stdout");
+console.log("////////////////////////////////////////////////////////////////////////////////");
+console.log();
 console.log(new TextDecoder().decode(stdout));
+console.log();
+
+console.log("////////////////////////////////////////////////////////////////////////////////");
+console.log("// new handovered pRuntime stderr");
+console.log("////////////////////////////////////////////////////////////////////////////////");
+console.log();
 console.log(new TextDecoder().decode(stderr));
+console.log();
 
 // oldProcess.kill("SIGKILL");
 
@@ -144,8 +157,5 @@ const previousStoragePath = path.join(previousPath, "data/storage_files")
 const storagePath = path.join(currentPath, "data/storage_files")
 try { Deno.removeSync(storagePath) } catch (err) { console.error(err.message) }
 try { copySync(previousStoragePath, storagePath) } catch (err) { console.error(err.message) }
-
-// Copy current to backups
-try { copySync(currentPath, `/opt/pruntime/backups/${currentVersion}`) } catch (err) { console.error(err.message) }
 
 Deno.exit(0);
