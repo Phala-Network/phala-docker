@@ -29,6 +29,7 @@ else
 
     sleep "$SLEEP_BEFORE_START"
   fi
+  PATH=/opt/pruntime-telemetry/bin:$PATH python3 pruntime_telemetry.py &
 fi
 
 mkdir -p "$STATE_FILE_PATH"
